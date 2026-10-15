@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddehfae7hfmji"]
+[gd_scene load_steps=5 format=3 uid="uid://ddehfae7hfmji"]
 
 [ext_resource type="Script" uid="uid://cfxmu5xcubimp" path="res://src/comic_frame/comic_frame.gd" id="1_cenh5"]
 [ext_resource type="Texture2D" uid="uid://dytytgrhva3tc" path="res://assets/sprites/border-story.png" id="2_border"]
 [ext_resource type="Texture2D" uid="uid://tn8cxhl03t12" path="res://assets/sprites/parchment.png" id="3_uv10l"]
+[ext_resource type="Texture2D" uid="uid://c0p7j1x8m08wx" path="res://assets/sprites/personagens/rei/SSMale(Ex1)(Happy)A2.png" id="4_mnwmv"]
 
 [node name="ComicFrame" type="Control"]
 custom_minimum_size = Vector2(270, 160)
@@ -15,16 +16,6 @@ offset_bottom = -560.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_cenh5")
-
-[node name="Background" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-expand_mode = 1
 
 [node name="BackgroundColorForNoStories" type="ColorRect" parent="."]
 layout_mode = 0
@@ -49,6 +40,16 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.23, 0.23)
 texture = ExtResource("3_uv10l")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
 
 [node name="FrameBorder" type="NinePatchRect" parent="."]
 z_index = 10
@@ -78,6 +79,22 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="CaracterTexture" type="TextureRect" parent="slotLeft"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.175
+anchor_top = 0.175
+anchor_right = 1.195
+anchor_bottom = 1.085
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+mouse_filter = 2
+texture = ExtResource("4_mnwmv")
+expand_mode = 1
+stretch_mode = 5
+flip_h = true
+
 [node name="slotRight" type="Control" parent="."]
 layout_mode = 1
 anchor_left = 0.75
@@ -91,3 +108,20 @@ offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="CaracterTexture2" type="TextureRect" parent="slotRight"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.175
+anchor_top = 0.175
+anchor_right = 1.195
+anchor_bottom = 1.085
+offset_left = -135.0
+offset_right = -135.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.7, 0.7)
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+flip_h = true

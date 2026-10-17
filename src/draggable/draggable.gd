@@ -9,6 +9,7 @@ extends ColorRect
 var _press_position := Vector2.ZERO
 var _is_pressed := false
 var _drag_started := false
+var _drag_is_active := false
 
 func _ready() -> void:
 	_update_label()
@@ -28,6 +29,7 @@ func _gui_input(event: InputEvent) -> void:
 		if event.position.distance_to(_press_position) >= drag_threshold:
 			_drag_started = true
 			_is_pressed = false
+			_set_drag_active(true)
 			force_drag(data, _create_drag_preview())
 			accept_event()
 
@@ -35,8 +37,20 @@ func _get_drag_data(at_position: Vector2) -> Variant:
 	if not data:
 		return null
 
+	_set_drag_active(true)
 	set_drag_preview(_create_drag_preview())
 	return data
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_DRAG_END:
+		_set_drag_active(false)
+
+func _set_drag_active(is_active: bool) -> void:
+	if _drag_is_active == is_active:
+		return
+
+	_drag_is_active = is_active
+	SignalBus.drag_is_active.emit(is_active)
 
 func _update_label() -> void:
 	if data:

@@ -1,11 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://ddehfae7hfmji"]
+[gd_scene load_steps=8 format=3 uid="uid://ddehfae7hfmji"]
 
 [ext_resource type="Script" uid="uid://cfxmu5xcubimp" path="res://src/comic_frame/comic_frame.gd" id="1_cenh5"]
 [ext_resource type="Texture2D" uid="uid://dytytgrhva3tc" path="res://assets/sprites/border-story.png" id="2_border"]
 [ext_resource type="Texture2D" uid="uid://tn8cxhl03t12" path="res://assets/sprites/parchment.png" id="3_uv10l"]
-[ext_resource type="Texture2D" uid="uid://c0p7j1x8m08wx" path="res://assets/sprites/personagens/rei/SSMale(Ex1)(Happy)A2.png" id="4_mnwmv"]
-[ext_resource type="Script" path="res://src/comic_frame/frame_animator.gd" id="5_animator"]
-[ext_resource type="Script" path="res://src/comic_frame/frame_story_logic.gd" id="6_story_logic"]
+[ext_resource type="Texture2D" uid="uid://c0p7j1x8m08wx" path="res://assets/sprites/character/king/SSMale(Ex1)(Happy)A2.png" id="4_mnwmv"]
+[ext_resource type="Script" uid="uid://ctfpiu5obwvon" path="res://src/comic_frame/frame_animator.gd" id="5_animator"]
+[ext_resource type="Script" uid="uid://ge0dxs2e0mht" path="res://src/comic_frame/frame_story_logic.gd" id="6_story_logic"]
+[ext_resource type="Script" uid="uid://da1eopemylsl4" path="res://src/comic_frame/drop_area.gd" id="7_drop_area"]
 
 [node name="ComicFrame" type="Control"]
 custom_minimum_size = Vector2(270, 160)
@@ -124,12 +125,25 @@ anchor_left = 0.175
 anchor_top = 0.175
 anchor_right = 1.195
 anchor_bottom = 1.085
-offset_left = -135.0
-offset_right = -135.0
+offset_left = 10.69997
+offset_top = -3.000002
+offset_right = 10.699966
+offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.7, 0.7)
 mouse_filter = 2
+texture = ExtResource("4_mnwmv")
 expand_mode = 1
 stretch_mode = 5
-flip_h = true
+
+[node name="DropArea" type="Control" parent="."]
+z_index = 20
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("7_drop_area")

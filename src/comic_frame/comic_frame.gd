@@ -11,12 +11,14 @@ enum CharacterSide {
 @onready var sprite_right: TextureRect = $slotRight/CharacterTexture
 @onready var animator: FrameAnimator = $FrameAnimator
 @onready var story_logic: FrameStoryLogic = $FrameStoryLogic
+@onready var drop_area: FrameDropArea = $DropArea
 
 var current_scene: SceneData
 var character_left: CharacterData
 var character_right: CharacterData
 
 func _ready() -> void:
+	drop_area.data_dropped.connect(_on_data_dropped)
 	clear_frame()
 
 func clear_frame() -> void:
@@ -57,16 +59,10 @@ func add_character(character: CharacterData, side: CharacterSide) -> void:
 	story_logic.update_scene_state(current_scene, character_left, character_right)
 	_emit_frame_changed()
 
-func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	if data is SceneData:
-		return true
-
-	return data is CharacterData and background.texture != null
-
-func _drop_data(at_position: Vector2, data: Variant) -> void:
+func _on_data_dropped(data: Variant, at_position: Vector2) -> void:
 	if data is SceneData:
 		set_scene(data)
-	elif data is CharacterData:
+	elif data is CharacterData and background.texture:
 		add_character(data, _side_from_position(at_position))
 
 func _get_sprite(side: CharacterSide) -> TextureRect:

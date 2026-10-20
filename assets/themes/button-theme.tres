@@ -1,0 +1,40 @@
+[gd_resource type="Theme" load_steps=7 format=3 uid="uid://bygmqgj2ibk41"]
+
+[ext_resource type="FontFile" uid="uid://b51vsjcce6hb7" path="res://assets/fonts/ModernAntiqua-Regular.ttf" id="1_y8na8"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wl6vo"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vhrua"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_bottom = 10
+border_color = Color(0.5372549, 0.33333334, 0.11764706, 0.72156864)
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_c18hx"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_bottom = 10
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5qwtu"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hpf4h"]
+bg_color = Color(0.23529412, 0.23529412, 0.23529412, 0)
+draw_center = false
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[resource]
+Button/colors/font_color = Color(0.5355421, 0.33262584, 0.115766115, 1)
+Button/colors/font_focus_color = Color(0.5372549, 0.33333334, 0.11764706, 1)
+Button/colors/font_hover_color = Color(0.8146471, 0.5275832, 0.23399374, 1)
+Button/colors/font_pressed_color = Color(0.9655772, 0.753672, 0.5622884, 1)
+Button/font_sizes/font_size = 70
+Button/fonts/font = ExtResource("1_y8na8")
+Button/styles/focus = SubResource("StyleBoxFlat_wl6vo")
+Button/styles/hover = SubResource("StyleBoxFlat_vhrua")
+Button/styles/hover_pressed = SubResource("StyleBoxFlat_c18hx")
+Button/styles/normal = SubResource("StyleBoxFlat_5qwtu")
+Button/styles/pressed = SubResource("StyleBoxFlat_hpf4h")

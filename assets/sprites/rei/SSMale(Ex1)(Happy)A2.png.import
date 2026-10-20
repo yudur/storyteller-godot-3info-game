@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0p7j1x8m08wx"
-path="res://.godot/imported/SSMale(Ex1)(Happy)A2.png-3c98200ef9cd6d52d2c63220276c8c43.ctex"
+path="res://.godot/imported/SSMale(Ex1)(Happy)A2.png-6bd226cddad47b95b7d566dcfeed6a27.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/personagens/rei/SSMale(Ex1)(Happy)A2.png"
-dest_files=["res://.godot/imported/SSMale(Ex1)(Happy)A2.png-3c98200ef9cd6d52d2c63220276c8c43.ctex"]
+source_file="res://assets/sprites/rei/SSMale(Ex1)(Happy)A2.png"
+dest_files=["res://.godot/imported/SSMale(Ex1)(Happy)A2.png-6bd226cddad47b95b7d566dcfeed6a27.ctex"]
 
 [params]
 

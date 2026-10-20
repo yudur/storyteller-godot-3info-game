@@ -1,9 +1,73 @@
-[gd_scene load_steps=5 format=3 uid="uid://ddehfae7hfmji"]
+[gd_scene load_steps=10 format=3 uid="uid://ddehfae7hfmji"]
 
 [ext_resource type="Script" uid="uid://cfxmu5xcubimp" path="res://src/comic_frame/comic_frame.gd" id="1_cenh5"]
 [ext_resource type="Texture2D" uid="uid://dytytgrhva3tc" path="res://assets/sprites/border-story.png" id="2_border"]
 [ext_resource type="Texture2D" uid="uid://tn8cxhl03t12" path="res://assets/sprites/parchment.png" id="3_uv10l"]
-[ext_resource type="Texture2D" uid="uid://c0p7j1x8m08wx" path="res://assets/sprites/personagens/rei/SSMale(Ex1)(Happy)A2.png" id="4_mnwmv"]
+[ext_resource type="Texture2D" uid="uid://c0p7j1x8m08wx" path="res://assets/sprites/rei/SSMale(Ex1)(Happy)A2.png" id="4_mnwmv"]
+[ext_resource type="Texture2D" uid="uid://d18fp6qnklow5" path="res://assets/sprites/rei/SSMale(Walking-normal)A2.png" id="5_6qwr6"]
+[ext_resource type="Texture2D" uid="uid://65shpg0md4cj" path="res://assets/sprites/rei/SSMale(Ex6)(Sad)A2.png" id="6_4emm8"]
+
+[sub_resource type="Animation" id="Animation_n80wo"]
+resource_name = "triste"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.56666666),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(139.5, 153), Vector2(133.5, 93), Vector2(211.5, 20)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.39, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [ExtResource("4_mnwmv"), ExtResource("5_6qwr6"), ExtResource("6_4emm8")]
+}
+
+[sub_resource type="Animation" id="Animation_ve4p5"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(139.5, 153)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_mnwmv")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_qps12"]
+_data = {
+&"RESET": SubResource("Animation_ve4p5"),
+&"triste": SubResource("Animation_n80wo")
+}
 
 [node name="ComicFrame" type="Control"]
 custom_minimum_size = Vector2(270, 160)
@@ -78,6 +142,17 @@ offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="slotLeft"]
+libraries = {
+&"": SubResource("AnimationLibrary_qps12")
+}
+autoplay = "triste"
+
+[node name="Sprite2D" type="Sprite2D" parent="slotLeft"]
+position = Vector2(139.5, 153)
+texture = ExtResource("4_mnwmv")
+region_rect = Rect2(104, 88, 32, 64)
 
 [node name="CaracterTexture" type="TextureRect" parent="slotLeft"]
 layout_mode = 1

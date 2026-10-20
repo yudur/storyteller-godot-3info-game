@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d18fp6qnklow5"
-path="res://.godot/imported/SSMale(Walking-normal)A2.png-62520ad5b10b7cc8425451aa3c41067f.ctex"
+uid="uid://bslg10eqrarqp"
+path="res://.godot/imported/background-prov.png-05b2bc1ed0d29062e19434297ad87e82.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/personagens/rei/SSMale(Walking-normal)A2.png"
-dest_files=["res://.godot/imported/SSMale(Walking-normal)A2.png-62520ad5b10b7cc8425451aa3c41067f.ctex"]
+source_file="res://assets/sprites/menus/background-prov.png"
+dest_files=["res://.godot/imported/background-prov.png-05b2bc1ed0d29062e19434297ad87e82.ctex"]
 
 [params]
 

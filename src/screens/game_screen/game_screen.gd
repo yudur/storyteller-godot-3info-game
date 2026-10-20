@@ -31,10 +31,9 @@ func create_frames() -> void:
 	if not frame_scene:
 		return
 
-	for scene_data in story.frames:
+	for scene_data in range(story.number_of_frames):
 		var frame := frame_scene.instantiate()
 		card_grid.add_child(frame)
-		frame.set_scene(scene_data)
 
 func create_draggable_items() -> void:
 	if not draggable_scene:

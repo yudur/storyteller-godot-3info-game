@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://deqltqa3x31bm"
-path="res://.godot/imported/book-open.png-c9ee5e6292513299d4d4a9274512fe87.ctex"
+uid="uid://choqme2ffjj6b"
+path="res://.godot/imported/Pergaminho Antigo Isolado.png-a7b3375653f7531cf23ee01ccaa0d5a1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/book-open.png"
-dest_files=["res://.godot/imported/book-open.png-c9ee5e6292513299d4d4a9274512fe87.ctex"]
+source_file="res://assets/sprites/flip_book/Pergaminho Antigo Isolado.png"
+dest_files=["res://.godot/imported/Pergaminho Antigo Isolado.png-a7b3375653f7531cf23ee01ccaa0d5a1.ctex"]
 
 [params]
 

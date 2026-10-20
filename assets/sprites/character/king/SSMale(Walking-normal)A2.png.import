@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cwewerbbh2ny0"
-path="res://.godot/imported/laboratorio.png-de6b80ccb6bce0c96ba121cee47a3324.ctex"
+uid="uid://d18fp6qnklow5"
+path="res://.godot/imported/SSMale(Walking-normal)A2.png-ffdba2122d3b1a2bb1f7df221cc98baa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/cenarios/laboratorio.png"
-dest_files=["res://.godot/imported/laboratorio.png-de6b80ccb6bce0c96ba121cee47a3324.ctex"]
+source_file="res://assets/sprites/character/king/SSMale(Walking-normal)A2.png"
+dest_files=["res://.godot/imported/SSMale(Walking-normal)A2.png-ffdba2122d3b1a2bb1f7df221cc98baa.ctex"]
 
 [params]
 

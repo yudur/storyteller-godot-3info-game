@@ -1,15 +1,15 @@
 [gd_resource type="Resource" script_class="StoryData" load_steps=7 format=3 uid="uid://bxcmbu01448fn"]
 
+[ext_resource type="Script" uid="uid://burx5wo2me7go" path="res://core/resources/CorrectAnswerRow.gd" id="1_5rume"]
 [ext_resource type="Script" uid="uid://d3r7qpwxq37o7" path="res://core/resources/story_data.gd" id="1_story"]
 [ext_resource type="Resource" uid="uid://cypkog1jlytfx" path="res://data/scenes/throne.tres" id="2_throne"]
-[ext_resource type="Resource" path="res://data/characters/monster.tres" id="3_e75mw"]
+[ext_resource type="Resource" uid="uid://bof5psw7do1db" path="res://data/characters/monster.tres" id="3_e75mw"]
 [ext_resource type="Resource" uid="uid://c8jho53k6fc8o" path="res://data/characters/king.tres" id="3_king"]
-[ext_resource type="Script" uid="uid://djfqqmcws3b1c" path="res://core/resources/scene_data.gd" id="3_owi3l"]
-[ext_resource type="Resource" path="res://data/scenes/laboratorio.tres" id="5_5rume"]
+[ext_resource type="Resource" uid="uid://bmsgyv3numbx5" path="res://data/scenes/laboratorio.tres" id="5_5rume"]
 
 [resource]
 script = ExtResource("1_story")
 id = "default_story"
 title = "Duchess Gets Butler Arrested"
-frames = Array[ExtResource("3_owi3l")]([ExtResource("2_throne"), ExtResource("2_throne"), ExtResource("2_throne")])
+number_of_frames = 4
 draggable_items = Array[Resource]([ExtResource("3_king"), ExtResource("2_throne"), ExtResource("3_e75mw"), ExtResource("5_5rume")])

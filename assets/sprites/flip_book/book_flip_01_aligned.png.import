@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dg75jundwpm7t"
-path="res://.godot/imported/sheets.png-db78b5a32c54c442a0293db70a69c60e.ctex"
+uid="uid://cnxfjl4mxn10l"
+path="res://.godot/imported/book_flip_01_aligned.png-b47e774ee6cc21d563055e882f11d3e6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/sheets.png"
-dest_files=["res://.godot/imported/sheets.png-db78b5a32c54c442a0293db70a69c60e.ctex"]
+source_file="res://assets/sprites/flip_book/book_flip_01_aligned.png"
+dest_files=["res://.godot/imported/book_flip_01_aligned.png-b47e774ee6cc21d563055e882f11d3e6.ctex"]
 
 [params]
 

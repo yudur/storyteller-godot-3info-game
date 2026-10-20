@@ -1,0 +1,105 @@
+[gd_scene load_steps=8 format=3 uid="uid://lagrhubkkadh"]
+
+[ext_resource type="Texture2D" uid="uid://cnxfjl4mxn10l" path="res://assets/sprites/flip_book/book_flip_01_aligned.png" id="1_frame_01"]
+[ext_resource type="Texture2D" uid="uid://choqme2ffjj6b" path="res://assets/sprites/flip_book/Pergaminho Antigo Isolado.png" id="5_whijw"]
+[ext_resource type="Shader" uid="uid://ci5ft6w0uln5u" path="res://assets/shaders/background/plasma.gdshader" id="6_background_shader"]
+[ext_resource type="PackedScene" uid="uid://cw6tci4kj4rnb" path="res://src/screens/game_screen/game_screen.tscn" id="8_game"]
+[ext_resource type="Script" uid="uid://ct4aexepab06t" path="res://src/screen_manager/screen_manager.gd" id="9_manager"]
+[ext_resource type="Script" uid="uid://b463pdohamr84" path="res://src/screen_manager/page_flip_mesh.gd" id="10_page_mesh"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_background"]
+shader = ExtResource("6_background_shader")
+shader_parameter/color_a = Color(0.035, 0.008, 0.1, 1)
+shader_parameter/color_b = Color(0.28, 0.035, 0.52, 1)
+shader_parameter/color_highlight = Color(0.72, 0.18, 0.95, 1)
+shader_parameter/speed = 0.18
+shader_parameter/scale = 3.2
+shader_parameter/contrast = 1.15
+
+[node name="ScreenManager" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("9_manager")
+
+[node name="Background" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_background")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="BookOpenBackground" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 84.0
+offset_top = -135.0
+offset_right = 1654.0679
+offset_bottom = 1045.9523
+scale = Vector2(0.735, 0.735)
+texture = ExtResource("1_frame_01")
+
+[node name="pageMesh" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(858.99994, 355)
+scale = Vector2(0.54028934, 0.5243639)
+texture = ExtResource("5_whijw")
+polygon = PackedVector2Array(-413.5, -637, 413.5, -637, 413.5, 637, -413.5, 637)
+uv = PackedVector2Array(0, 0, 827, 0, 827, 1274, 0, 1274)
+script = ExtResource("10_page_mesh")
+metadata/_custom_type_script = "uid://b463pdohamr84"
+
+[node name="ScreenViewportContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 217.0
+offset_top = 60.0
+offset_right = -194.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="ScreenViewport" type="SubViewport" parent="ScreenViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(869, 616)
+size_2d_override_stretch = true
+render_target_update_mode = 4
+
+[node name="GameScreen" parent="ScreenViewportContainer/ScreenViewport" instance=ExtResource("8_game")]
+offset_left = 8.0
+offset_right = 8.0
+
+[node name="PageFlipMesh" type="Polygon2D" parent="."]
+visible = false
+z_index = 15
+position = Vector2(217, 60)
+script = ExtResource("10_page_mesh")
+
+[node name="FlipBackButton" type="Button" parent="."]
+z_index = 20
+layout_mode = 0
+offset_left = 24.0
+offset_top = 640.0
+offset_right = 84.0
+offset_bottom = 696.0
+tooltip_text = "Testar virada para a esquerda"
+text = "<"
+
+[node name="FlipNextButton" type="Button" parent="."]
+z_index = 20
+layout_mode = 0
+offset_left = 1196.0
+offset_top = 640.0
+offset_right = 1256.0
+offset_bottom = 696.0
+tooltip_text = "Testar virada para a direita"
+text = ">"

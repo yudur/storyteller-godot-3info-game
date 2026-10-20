@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=2 format=3 uid="uid://cgmosnecok2kd"]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3 uid="uid://bof5psw7do1db"]
 
 [ext_resource type="Script" uid="uid://lywddvaxagxe" path="res://core/resources/character_data.gd" id="1_ckqcv"]
+[ext_resource type="Texture2D" uid="uid://d18fp6qnklow5" path="res://assets/sprites/character/king/SSMale(Walking-normal)A2.png" id="2_xjihn"]
 
 [resource]
 script = ExtResource("1_ckqcv")
 id = "monster"
 display_name = "Monster"
+sprite_normal = ExtResource("2_xjihn")
 metadata/_custom_type_script = "uid://lywddvaxagxe"

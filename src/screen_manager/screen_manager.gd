@@ -5,7 +5,10 @@ extends Control
 
 @onready var screen_container: SubViewportContainer = $ScreenViewportContainer
 @onready var screen_viewport: SubViewport = $ScreenViewportContainer/ScreenViewport
+@onready var next_screen_container: SubViewportContainer = $NextScreenViewportContainer
+@onready var next_screen_viewport: SubViewport = $NextScreenViewportContainer/NextScreenViewport
 @onready var page_mesh: PageFlipMesh = $PageFlipMesh
+@onready var next_page_mesh: PageFlipMesh = $NextPageFlipMesh
 @onready var physical_page: PageFlipMesh = $pageMesh
 @onready var flip_back_button: Button = $FlipBackButton
 @onready var flip_next_button: Button = $FlipNextButton
@@ -15,6 +18,7 @@ var _flip_direction := 1.0
 var _physical_center := Vector2.ZERO
 var _physical_scale := Vector2.ONE
 var _physical_size := Vector2.ZERO
+var _current_is_start := true
 
 func _ready() -> void:
 	flip_back_button.pressed.connect(flip_page_back)
@@ -27,6 +31,7 @@ func _ready() -> void:
 	_physical_size = physical_page.texture.get_size()
 
 	page_mesh.setup(book_size, screen_viewport.get_texture())
+	next_page_mesh.setup(book_size, next_screen_viewport.get_texture())
 	physical_page.setup(
 		Vector2(_physical_size.x * 2.0, _physical_size.y),
 		physical_page.texture,
@@ -37,26 +42,48 @@ func _ready() -> void:
 	page_mesh.scale = Vector2.ONE
 	page_mesh.visible = false
 	physical_page.visible = false
+	next_page_mesh.visible = false
+
+	var start_screen := screen_viewport.get_node_or_null("StartScreen")
+	if start_screen and start_screen.has_signal("start_requested"):
+		start_screen.start_requested.connect(_on_start_requested)
 
 func flip_page_next() -> void:
-	_play_flip(1.0)
+	if _current_is_start:
+		_play_flip(1.0)
 
 func flip_page_back() -> void:
-	_play_flip(-1.0)
+	if not _current_is_start:
+		_play_scene_flip(-1.0)
 
 func _play_flip(direction: float) -> void:
+	_play_scene_flip(direction)
+
+func _on_start_requested() -> void:
+	_play_scene_flip(1.0)
+
+func _play_scene_flip(direction: float) -> void:
 	if _is_flipping:
 		return
 
 	_is_flipping = true
 	_flip_direction = direction
 	screen_container.visible = false
+	next_screen_container.visible = false
+	next_screen_container.modulate.a = 0.0
+	screen_container.modulate.a = 0.0
 	page_mesh.visible = true
+	next_page_mesh.visible = true
 	physical_page.visible = true
-	page_mesh.z_index = 15
 	physical_page.z_index = 16
 	page_mesh.begin_flip(direction)
+	next_page_mesh.begin_flip(direction)
 	physical_page.begin_flip(direction)
+	_set_content_layers(direction)
+	if direction > 0.0:
+		next_page_mesh.set_progress(1.0, -_flip_direction)
+	else:
+		page_mesh.set_progress(1.0, -_flip_direction)
 
 	var tween := create_tween()
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -71,20 +98,42 @@ func _set_physical_page_position(book_size: Vector2) -> void:
 	)
 
 func _apply_flip_progress(progress: float) -> void:
-	page_mesh.set_progress(progress, _flip_direction)
+	if _flip_direction > 0.0:
+		page_mesh.set_progress(progress, _flip_direction)
+		next_page_mesh.set_progress(1.0 - progress, -_flip_direction)
+	else:
+		next_page_mesh.set_progress(progress, _flip_direction)
+		page_mesh.set_progress(1.0 - progress, -_flip_direction)
+
 	physical_page.set_progress(progress, _flip_direction)
 
-	if progress >= 0.5:
-		page_mesh.z_index = 17
-		physical_page.z_index = 16
+	if _flip_direction > 0.0:
+		_set_content_layers(_flip_direction if progress < 0.5 else -_flip_direction)
+		next_screen_container.visible = progress >= 0.5
+		next_screen_container.modulate.a = smoothstep(0.5, 0.85, progress)
 	else:
-		page_mesh.z_index = 15
-		physical_page.z_index = 16
+		_set_content_layers(_flip_direction if progress < 0.5 else -_flip_direction)
 
 func _finish_flip() -> void:
 	page_mesh.finish_flip()
+	next_page_mesh.finish_flip()
+	page_mesh.set_progress(0.0, -_flip_direction)
+	next_page_mesh.set_progress(0.0, -_flip_direction)
 	physical_page.finish_flip()
 	page_mesh.visible = false
+	next_page_mesh.visible = false
+	screen_container.modulate.a = 1.0
+	next_screen_container.modulate.a = 1.0
 	physical_page.visible = false
-	screen_container.visible = true
+	_current_is_start = not _current_is_start
+	screen_container.visible = _current_is_start
+	next_screen_container.visible = not _current_is_start
 	_is_flipping = false
+
+func _set_content_layers(outgoing_direction: float) -> void:
+	if outgoing_direction > 0.0:
+		page_mesh.z_index = 17
+		next_page_mesh.z_index = 14
+	else:
+		next_page_mesh.z_index = 17
+		page_mesh.z_index = 14

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://lagrhubkkadh"]
+[gd_scene load_steps=9 format=3 uid="uid://lagrhubkkadh"]
 
 [ext_resource type="Texture2D" uid="uid://cnxfjl4mxn10l" path="res://assets/sprites/flip_book/book_flip_01_aligned.png" id="1_frame_01"]
 [ext_resource type="Texture2D" uid="uid://choqme2ffjj6b" path="res://assets/sprites/flip_book/Pergaminho Antigo Isolado.png" id="5_whijw"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cw6tci4kj4rnb" path="res://src/screens/game_screen/game_screen.tscn" id="8_game"]
 [ext_resource type="Script" uid="uid://ct4aexepab06t" path="res://src/screen_manager/screen_manager.gd" id="9_manager"]
 [ext_resource type="Script" uid="uid://b463pdohamr84" path="res://src/screen_manager/page_flip_mesh.gd" id="10_page_mesh"]
+[ext_resource type="PackedScene" uid="uid://bur7i0vopvpev" path="res://src/screens/start_screen/start_screen.tscn" id="11_start"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_background"]
 shader = ExtResource("6_background_shader")
@@ -74,13 +75,52 @@ size = Vector2i(869, 616)
 size_2d_override_stretch = true
 render_target_update_mode = 4
 
-[node name="GameScreen" parent="ScreenViewportContainer/ScreenViewport" instance=ExtResource("8_game")]
-offset_left = 8.0
-offset_right = 8.0
+[node name="StartScreen" parent="ScreenViewportContainer/ScreenViewport" instance=ExtResource("11_start")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NextScreenViewportContainer" type="SubViewportContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 217.0
+offset_top = 60.0
+offset_right = -194.0
+offset_bottom = -44.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+
+[node name="NextScreenViewport" type="SubViewport" parent="NextScreenViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(869, 616)
+size_2d_override_stretch = true
+render_target_update_mode = 0
+
+[node name="GameScreen" parent="NextScreenViewportContainer/NextScreenViewport" instance=ExtResource("8_game")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PageFlipMesh" type="Polygon2D" parent="."]
 visible = false
 z_index = 15
+position = Vector2(217, 60)
+script = ExtResource("10_page_mesh")
+
+[node name="NextPageFlipMesh" type="Polygon2D" parent="."]
+visible = false
+z_index = 14
 position = Vector2(217, 60)
 script = ExtResource("10_page_mesh")
 

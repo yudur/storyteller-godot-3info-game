@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://bur7i0vopvpev"]
 
 [ext_resource type="Script" uid="uid://2xkkixbvc6nh" path="res://src/screens/start_screen/start_screen.gd" id="1_fplgf"]
-[ext_resource type="Texture2D" uid="uid://bslg10eqrarqp" path="res://assets/sprites/menus/background-prov.png" id="2_7pm4q"]
+[ext_resource type="Texture2D" uid="uid://dgdi3xvm0gpx4" path="res://assets/sprites/menus/Escritório de Alquimia em Moldura Ornamental.png" id="2_fplgf"]
 [ext_resource type="Theme" uid="uid://bygmqgj2ibk41" path="res://assets/themes/button-theme.tres" id="3_8eu36"]
 
 [node name="Control" type="Control"]
@@ -13,35 +13,66 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fplgf")
 
-[node name="TextureRect" type="TextureRect" parent="."]
+[node name="TextureRect2" type="TextureRect" parent="."]
+visible = false
 layout_mode = 0
-offset_right = 1280.0
-offset_bottom = 720.0
-texture = ExtResource("2_7pm4q")
+offset_right = 1175.0
+offset_bottom = 1339.0
+texture = ExtResource("2_fplgf")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="art" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/art"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_fplgf")
 expand_mode = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 0
-offset_left = 855.0
-offset_top = 153.0
-offset_right = 1034.0
-offset_bottom = 569.0
+[node name="buttons" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/buttons"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -90.0
+offset_top = -202.0
+offset_right = 90.0
+offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_top = 100
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/buttons/MarginContainer"]
 layout_mode = 2
 
-[node name="start" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="start" type="Button" parent="HBoxContainer/buttons/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("3_8eu36")
 text = "Jogar"
 
-[node name="quit" type="Button" parent="MarginContainer/VBoxContainer"]
+[node name="quit" type="Button" parent="HBoxContainer/buttons/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme = ExtResource("3_8eu36")
 text = "Sair"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/start" to="." method="_on_start_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="HBoxContainer/buttons/MarginContainer/VBoxContainer/start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="HBoxContainer/buttons/MarginContainer/VBoxContainer/quit" to="." method="_on_quit_pressed"]

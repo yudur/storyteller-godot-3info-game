@@ -1,7 +1,7 @@
 # Fase 2 — "Tatiana Sampaio ajuda um cadeirante" — Design
 
 Data: 2026-10-25
-Fonte: `level_design.txt` (fase 2) e os sprites em `assets/sprites/characters/`
+Fonte: `level_design.txt` (fase 2) e a arte em `assets/sprites/`
 Continua: `docs/superpowers/specs/2026-10-25-fase1-lovelace-design.md`
 
 ## Objetivo
@@ -9,7 +9,7 @@ Continua: `docs/superpowers/specs/2026-10-25-fase1-lovelace-design.md`
 Implementar a segunda fase jogável: um cadeirante chega ao hospital, Tatiana
 Sampaio lê seus exames, analisa a proteína polilaminina no laboratório, aplica
 a proteína nele, e ele volta a andar. Três quadros, o mesmo verbo da fase 1 —
-arrastar peças puras e deixar o contexto escolher poses e variações de cenário.
+arrastar peças puras e deixar o contexto escolher as poses.
 
 Público: o mesmo visitante de feira (SNCT), sem tutorial. Por isso a fase 2 não
 inventa regra nova: quem aprendeu a fase 1 joga esta sem reaprender nada.
@@ -20,29 +20,31 @@ cadeirante fica de pé; quadros incoerentes mostram dúvida; a fase aparece como
 
 ## Adaptações do level design
 
-O texto original pede coisas que o tabuleiro não expressa. Um quadro comporta
+O texto original pede coisas que o tabuleiro não expressa — um quadro comporta
 um cenário e **duas** peças, e o `level_design.txt` pede quatro em dois cards.
-As adaptações, com o porquê:
+A arte que já existe também discorda do texto em um ponto. As adaptações, com
+o porquê:
 
-1. **Objetos viram peças só onde há desafio.** No Card 2 o microscópio e a
-   lâmina são arrastáveis (como o Bule de chá já é na fase 1). Nos Cards 1 e 3
-   os objetos — exames, injeção — vivem **dentro das poses**, que é como a
-   caneta da Ada já funciona. O texto diz "na cena normal ela não está lendo":
-   isso é exatamente o contexto escolhendo a pose.
-2. **No Card 2, Tatiana faz parte do cenário.** Como os dois slots ficam com o
-   microscópio e a lâmina, ela não cabe como peça nesse quadro. O laboratório
-   tem duas variantes e é a postura dela que muda.
-3. **"Ordem certa" vira "os dois instrumentos presentes".** O texto pede o
-   microscópio e a lâmina na ordem certa no balcão. Na fase 1 o lado **nunca**
-   importa, e um "?" não ensina para que lado trocar — o visitante ficaria com
-   as duas peças certas no quadro certo e nenhuma pista, em trinta segundos de
-   interação. O desafio do card passa a ser perceber que o laboratório pede os
-   dois instrumentos.
+1. **Objetos viram peças só onde fazem falta.** No Card 2 a lâmina é
+   arrastável (como o Bule de chá já é na fase 1). Nos Cards 1 e 3 os objetos —
+   exames, injeção — vivem **dentro das poses**, que é como a caneta da Ada já
+   funciona. O texto diz "na cena normal ela não está lendo": isso é exatamente
+   o contexto escolhendo a pose.
+2. **O microscópio fica no cenário, não é peça.** `scenario_phase2_lab.png` já
+   desenha o microscópio sobre a bancada. Se ele também fosse sprite de slot,
+   apareceriam dois. As peças do Card 2 passam a ser Tatiana e a lâmina, e é a
+   pose dela que muda para "olhando no microscópio" — que é precisamente o que
+   `Tatiana usando microscópio.png`, deixada na raiz, mostra.
+3. **O desafio do balcão sai.** O texto pede o microscópio e a lâmina na ordem
+   certa no balcão. Na fase 1 o lado **nunca** importa, e um "?" não ensina
+   para que lado trocar — o visitante ficaria com as peças certas no quadro
+   certo e nenhuma pista, em trinta segundos de interação. O desafio do Card 2
+   passa a ser perceber que o laboratório pede a Tatiana e a lâmina.
 4. **O Card 3 acontece no hospital.** O texto não dá cenário; o contexto (ele
    lê a pesquisa, ela aplica a injeção) pede o mesmo hospital do Card 1.
 5. **`Tatiana aplicando injeção no cadeirante.png` fica fora dos slots.** É um
-   sprite com os dois personagens, e o motor desenha um por lado. Fica guardado
-   como arte de referência do desfecho.
+   sprite com os dois personagens, e o motor desenha um por lado. Fica como
+   arte de referência do desfecho.
 6. **Três quadros não são adaptação:** `StoryData.number_of_frames` já é
    configurável por fase.
 7. **Sem mapa de áudio.** Os sons por momento foram removidos do jogo no commit
@@ -56,9 +58,12 @@ As adaptações, com o porquê:
    pelo momento anterior — o mesmo recurso que a fase 1 usa três vezes com
    Escritório + Ada + Charles.
 3. **Lado não importa em lugar nenhum**, como na fase 1.
-4. **Tatiana é quem mostra dúvida.** No Card 2 não há personagem com cara para
-   fazer, então aparece só o "?" — igual à cozinha sem a Ada.
-5. **A arte que falta entra como placeholder gerado**, substituível por arquivo
+4. **A fase 2 não usa variantes de cenário.** Os dois cenários têm só
+   `default`; a história inteira é contada pelas poses. A fase 1 usava variantes
+   porque a porta do escritório abria; aqui nada no cenário muda.
+5. **Tatiana é quem mostra dúvida**, e ela está nos três cards, então a dúvida
+   tem sempre uma cara para fazer.
+6. **A arte que falta entra como placeholder gerado**, substituível por arquivo
    sem mudar código, como foi feito com o Bule de chá.
 
 ## Arquitetura
@@ -107,35 +112,36 @@ movida e não mudam: são eles a rede da extração.
 
 `core/story_logic/tatiana_logic.gd`, `TatianaLogic extends MomentLogic`.
 
-Peças da prateleira, com id e nome de exibição:
+Peças da prateleira:
 
 | Id | Tipo | Nome |
 |---|---|---|
 | `patient` | `CharacterData` | Cadeirante |
 | `tatiana` | `CharacterData` | Tatiana Sampaio |
-| `microscope` | `CharacterData` | Microscópio |
 | `slide` | `CharacterData` | Lâmina |
 | `hospital` | `SceneData` | Hospital |
 | `lab` | `SceneData` | Laboratório |
 
-Microscópio e lâmina são `CharacterData` porque ocupam slot e precisam contar
-para "quadro completo" — exatamente como o Bule de chá.
+A lâmina é `CharacterData` porque ocupa slot e precisa contar para "quadro
+completo" — exatamente como o Bule de chá.
 
 Momentos:
 
-| Momento | Condição | Variante | Poses |
-|---|---|---|---|
-| M1 Diagnóstico | Hospital + Cadeirante + Tatiana, em `index == 0` | `default` | `patient` `default`, `tatiana` `exams` |
-| M2 Análise | Laboratório + Microscópio + Lâmina, anterior M1 | `observing` | ambos `default` |
-| M3 Tratamento | Hospital + Cadeirante + Tatiana, anterior M2 | `default` | `patient` `hopeful`, `tatiana` `syringe` |
+| Momento | Condição | Poses |
+|---|---|---|
+| M1 Diagnóstico | Hospital + Cadeirante + Tatiana, em `index == 0` | `patient` `default`, `tatiana` `exams` |
+| M2 Análise | Laboratório + Tatiana + Lâmina, anterior M1 | `tatiana` `microscope`, `slide` `default` |
+| M3 Tratamento | Hospital + Cadeirante + Tatiana, anterior M2 | `patient` `hopeful`, `tatiana` `syringe` |
+
+A variante de cenário dos três é `default` (ver Decisão 4).
 
 `_match_moment`:
 
 ```
 if scene == "hospital" and tem patient e tatiana:
-	index == 0            -> "M1"
+	index == 0              -> "M1"
 	previous_moment == "M2" -> "M3"
-elif scene == "lab" and tem microscope e slide:
+elif scene == "lab" and tem tatiana e slide:
 	previous_moment == "M1" -> "M2"
 senão -> ""
 ```
@@ -151,14 +157,6 @@ aplica `left_pose` a quem estiver à esquerda. Por isso `ending(board)` inspecio
 o último quadro: o lado que tem `patient` recebe `cured`, o lado que tem
 `tatiana` recebe `happy`. Devolve `null` se a fase não estiver resolvida.
 
-### O laboratório
-
-`lab/default` é o laboratório com Tatiana sentada e o balcão vazio.
-`lab/observing` é o mesmo laboratório com ela debruçada no microscópio. O
-microscópio e a lâmina são desenhados nos slots, sobre o balcão, nos **dois**
-estados — assim o fundo nunca desenha um microscópio que já está no slot, e não
-aparecem dois.
-
 ## Dados
 
 Recursos novos em `data/`:
@@ -166,37 +164,42 @@ Recursos novos em `data/`:
 | Recurso | Chaves |
 |---|---|
 | `characters/patient.tres` | `default`, `hopeful`, `cured` |
-| `characters/tatiana.tres` | `default`, `exams`, `syringe`, `doubt`, `happy` |
-| `characters/microscope.tres` | `default` |
+| `characters/tatiana.tres` | `default`, `exams`, `microscope`, `syringe`, `doubt`, `happy` |
 | `characters/slide.tres` | `default` |
 | `scenes/hospital.tres` | `default` |
-| `scenes/lab.tres` | `default`, `observing` |
-| `stories/tatiana_protein.tres` | "Tatiana Sampaio ajuda um cadeirante", 3 quadros, as seis peças, `logic = tatiana_logic.gd` |
+| `scenes/lab.tres` | `default` |
+| `stories/tatiana_protein.tres` | "Tatiana Sampaio ajuda um cadeirante", 3 quadros, as cinco peças, `logic = tatiana_logic.gd` |
 
 A fase entra no array `stories` de `src/screens/menu_screen/menu_screen.tscn`
 **depois** da fase 1, e vira "Capítulo 2" pela ordem do array.
 
 ### Arte
 
-Três dos quatro PNGs desenhados entram direto, renomeados para o padrão do
-projeto (minúsculas, sem acento nem espaço — um deles hoje é
-`Cadeirante curado .png`, com espaço antes do ponto, que quebra em caminho
-`res://` cedo ou tarde):
+Os nomes de arquivo seguem o padrão que o projeto já usa para personagens:
+português, com espaços e acentos (`Ada Lovelace com Caneta de pena.png`).
+**Nada é renomeado.**
 
-| Pose | Arquivo de origem |
+Oito das doze imagens já existem:
+
+| Pose | Arquivo |
 |---|---|
 | `patient` `default` (serve também para o M1: ele já está cabisbaixo) | `Cadeirante default.png` |
 | `patient` `cured` | `Cadeirante curado .png` |
-| `tatiana` `syringe`, e `happy` no desfecho | `Tatiana Sampaio com seringa e exames.png` |
+| `tatiana` `default` | `Tatiane Sampaio Default.png` |
+| `tatiana` `exams` | `Tatiana Sampaio com exame.png` |
+| `tatiana` `syringe` | `Tatiana Sampaio com seringa.png` |
+| `tatiana` `happy` (desfecho; ela está sorrindo) | `Tatiana Sampaio com seringa e exames.png` |
+| `hospital` `default` | `scenario_phase2_hospital.png` |
+| `lab` `default` | `scenario_phase2_lab.png` |
 
-`Tatiana aplicando injeção no cadeirante.png` não é usada nos slots.
+Faltam **quatro**, que entram como placeholder gerado (PNG com o nome da peça
+escrito, no modelo do `teapot_placeholder.png`): `patient` `hopeful`,
+`tatiana` `microscope`, `tatiana` `doubt` e `slide` `default`. Trocar qualquer
+um depois é substituir o arquivo — nenhuma linha de código muda.
 
-Entram como placeholder gerado, com o nome da peça escrito na imagem:
-`tatiana` `default`, `exams` e `doubt`; `patient` `hopeful`; `microscope`
-`default`; `slide` `default`; `hospital` `default`; `lab` `default` e
-`observing`. São 9 arquivos, e trocar qualquer um depois não mexe em código.
-`Tatiana usando microscópio.png`, na raiz, é a referência visual do
-`lab/observing`.
+`Tatiana usando microscópio.png`, na raiz, é um quadro montado e serve de
+referência visual para a pose `tatiana` `microscope`. Não é usada pelo jogo.
+`Tatiana aplicando injeção no cadeirante.png` também não.
 
 ## Erros e casos-limite
 
@@ -204,11 +207,13 @@ Entram como placeholder gerado, com o nome da peça escrito na imagem:
   `CharacterData.get_pose` e `SceneData.get_variant` já têm.
 - Hospital + Cadeirante + Tatiana no card 2 (depois do M1) não casa momento
   nenhum: M3 exige anterior M2. Resultado: dúvida.
-- Laboratório + Microscópio + Lâmina no card 1 não casa: M2 exige anterior M1.
+- Laboratório + Tatiana + Lâmina no card 1 não casa: M2 exige anterior M1.
   Resultado: dúvida.
-- Laboratório com só um instrumento conta como quadro incompleto, logo neutro,
-  e os quadros seguintes cascateiam para neutro como na fase 1.
-- Mesma peça nos dois lados (dois microscópios) não forma par: dúvida.
+- Laboratório só com a Tatiana conta como quadro incompleto, logo neutro, e os
+  quadros seguintes cascateiam para neutro como na fase 1.
+- Mesma peça nos dois lados (duas Tatianas) não forma par: dúvida.
+- Trocar de capítulo recria o tabuleiro: a fase 1 tem 4 quadros e a fase 2 tem
+  3, então `load_story` precisa entregar a contagem certa e a prateleira certa.
 - Com dois capítulos no menu, concluir o capítulo 1 deve marcar o capítulo 1.
   É o que torna real a guarda de `_on_phase_selected` no `ScreenManager`, até
   aqui exercitada só por um teste sintético.
@@ -221,20 +226,22 @@ Comandos no `README.md`; a suíte roda com `GODOT=... sh tests/run_all.sh`.
   `tests/test_lovelace_logic.gd`, que não muda. Esse é o motivo de extrair
   agora e não depois.
 - `tests/test_tatiana_logic.gd` (novo) cobre só a tabela da fase 2: os três
-  momentos com suas variantes e poses; `is_solved` na solução; lados invertidos
-  dando os mesmos momentos; laboratório sem a lâmina ficando neutro e
-  cascateando; hospital no card 2 e laboratório no card 1 dando dúvida;
-  `tatiana` recebendo a pose `doubt` e o microscópio não; e o `ending` pondo
-  `cured` e `happy` em cada lado certo, **inclusive com as peças invertidas**.
-- `tests/test_phase_data.gd` ganha as asserções dos sete recursos novos.
+  momentos com suas poses; `is_solved` na solução; lados invertidos dando os
+  mesmos momentos; laboratório sem a lâmina ficando neutro e cascateando;
+  hospital no card 2 e laboratório no card 1 dando dúvida; `tatiana` recebendo
+  a pose `doubt` e a lâmina não; e o `ending` pondo `cured` e `happy` em cada
+  lado certo, **inclusive com as peças invertidas**.
+- `tests/test_phase_data.gd` ganha as asserções dos seis recursos novos.
 - `tests/test_menu.gd` passa a esperar **dois** capítulos: "Capítulo 2" existe
-  com o título da fase 2, e concluir o capítulo 1 marca o capítulo 1 e não o 2.
+  com o título da fase 2, trocar de capítulo recria o tabuleiro com 3 quadros,
+  e concluir o capítulo 1 marca o capítulo 1 e não o 2.
 
 Verificação manual, rodando o jogo: a fase abre pelo menu, as três montagens
-trocam poses e a variante do laboratório, e o desfecho põe o cadeirante de pé.
+trocam as poses, e o desfecho põe o cadeirante de pé.
 
 ## Fora de escopo
 
 Fases 3+, momentos declarados em Resources editáveis no inspetor, sons por
-momento (removidos do jogo), a arte definitiva das 8 imagens em placeholder, e
-qualquer mudança no modelo de quadro (cenário + duas peças continua como está).
+momento (removidos do jogo), a arte definitiva das 4 imagens em placeholder,
+renomear arquivos de arte, e qualquer mudança no modelo de quadro (cenário +
+duas peças continua como está).

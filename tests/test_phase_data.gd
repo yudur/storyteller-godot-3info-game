@@ -36,4 +36,33 @@ func _initialize() -> void:
 			"ids"
 		)
 
+	var patient: CharacterData = load("res://data/characters/patient.tres")
+	t.check(patient != null, "patient.tres loads")
+	if patient:
+		for key in ["default", "hopeful", "cured"]:
+			t.check(patient.poses.get(key) is Texture2D, "patient pose %s" % key)
+
+	var tatiana: CharacterData = load("res://data/characters/tatiana.tres")
+	t.check(tatiana != null, "tatiana.tres loads")
+	if tatiana:
+		for key in ["default", "exams", "microscope", "syringe", "doubt", "happy"]:
+			t.check(tatiana.poses.get(key) is Texture2D, "tatiana pose %s" % key)
+		t.eq(tatiana.get_pose("nao_existe"), tatiana.poses["default"], "phase 2 pose fallback")
+
+	var slide: CharacterData = load("res://data/characters/slide.tres")
+	t.check(slide != null and slide.poses.get("default") is Texture2D, "slide default")
+
+	var hospital: SceneData = load("res://data/scenes/hospital.tres")
+	t.check(hospital != null and hospital.variants.get("default") is Texture2D, "hospital default")
+
+	var lab: SceneData = load("res://data/scenes/lab.tres")
+	t.check(lab != null and lab.variants.get("default") is Texture2D, "lab default")
+
+	if patient and tatiana and slide and hospital and lab:
+		t.eq(
+			[patient.id, tatiana.id, slide.id, hospital.id, lab.id],
+			["patient", "tatiana", "slide", "hospital", "lab"],
+			"phase 2 ids"
+		)
+
 	t.finish(self)

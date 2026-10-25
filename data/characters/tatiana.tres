@@ -12,6 +12,7 @@
 script = ExtResource("1_script")
 id = "tatiana"
 display_name = "Tatiana Sampaio"
+faces_right = true
 poses = Dictionary[String, Texture2D]({
 "default": ExtResource("2_default"),
 "doubt": ExtResource("6_doubt"),

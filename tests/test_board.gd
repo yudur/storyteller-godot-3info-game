@@ -99,6 +99,7 @@ func test_phase_2_characters_face_the_center() -> void:
 	left_frame.add_character(tatiana, RIGHT)
 	await get_tree().process_frame
 	t.eq(left_frame.sprite_left.flip_h, true, "the patient on the left is mirrored to face right")
+	t.eq(left_frame.sprite_right.flip_h, true, "Tatiana on the right is mirrored to face left")
 
 	var right_frame := await new_frame()
 	right_frame.set_scene(hospital)
@@ -106,6 +107,7 @@ func test_phase_2_characters_face_the_center() -> void:
 	right_frame.add_character(patient, RIGHT)
 	await get_tree().process_frame
 	t.eq(right_frame.sprite_right.flip_h, false, "the patient on the right keeps facing left")
+	t.eq(right_frame.sprite_left.flip_h, false, "Tatiana on the left keeps facing right")
 
 	left_frame.queue_free()
 	right_frame.queue_free()

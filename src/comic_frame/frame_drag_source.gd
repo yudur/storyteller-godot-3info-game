@@ -35,6 +35,7 @@ func _create_drag_preview() -> TextureRect:
 	preview.texture = texture
 	preview.expand_mode = expand_mode
 	preview.stretch_mode = stretch_mode
+	preview.flip_h = flip_h
 	preview.size = size
 	preview.modulate = Color(1.0, 1.0, 1.0, 0.7)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE

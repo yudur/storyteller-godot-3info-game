@@ -26,6 +26,7 @@ var logic: StoryLogic
 var frames: Array[ComicFrame] = []
 var _last_results: Array[FrameResult] = []
 var _ending_played := false
+var _evaluation_queued := false
 var _ending_tween: Tween
 
 func _ready() -> void:
@@ -36,7 +37,7 @@ func _ready() -> void:
 func load_story(story_data: StoryData) -> void:
 	story = story_data
 	title_label.text = story.title
-	_cancel_ending()
+	cancel_ending()
 	logic = story.logic.new() if story.logic else null
 	if not logic:
 		push_warning("Story '%s' has no logic script; frames will stay neutral" % story.id)
@@ -63,7 +64,7 @@ func create_frames() -> void:
 	for index in range(story.number_of_frames):
 		var frame: ComicFrame = frame_scene.instantiate()
 		card_grid.add_child(frame)
-		frame.contents_changed.connect(_evaluate_board)
+		frame.contents_changed.connect(_queue_evaluation)
 		frame.item_dropped.connect(SoundPlayer.play.bind(SOUND_DROP))
 		frames.append(frame)
 
@@ -82,7 +83,24 @@ func collect_board() -> Array[FrameContent]:
 		board.append(frame.get_content())
 	return board
 
+func cancel_ending() -> void:
+	if _ending_tween:
+		_ending_tween.kill()
+		_ending_tween = null
+	_ending_played = false
+	completion_panel.hide()
+
+# A drag between frames changes two frames (drop on the target, then drag end on
+# the source) in the same frame; evaluating once afterwards avoids judging a board
+# where the dragged item is briefly in both places
+func _queue_evaluation() -> void:
+	if _evaluation_queued:
+		return
+	_evaluation_queued = true
+	_evaluate_board.call_deferred()
+
 func _evaluate_board() -> void:
+	_evaluation_queued = false
 	if not logic or _ending_played:
 		return
 
@@ -113,13 +131,6 @@ func _play_ending(ending: EndingData) -> void:
 	_ending_tween.tween_interval(ending_hold)
 	_ending_tween.tween_callback(completion_panel.show)
 	_ending_tween.tween_callback(SoundPlayer.play.bind(SOUND_BELL))
-
-func _cancel_ending() -> void:
-	if _ending_tween:
-		_ending_tween.kill()
-		_ending_tween = null
-	_ending_played = false
-	completion_panel.hide()
 
 func _set_board_interactive(enabled: bool) -> void:
 	for frame in frames:

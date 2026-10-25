@@ -20,6 +20,10 @@ enum CharacterSide {
 var current_scene: SceneData
 var character_left: CharacterData
 var character_right: CharacterData
+# Item and slot ("left", "right", "scene") that received a drop this frame. Godot
+# delivers the drop before the source's drag end, so the source uses this to tell
+# "dropped back onto itself" from "moved elsewhere"
+var _last_drop := {}
 
 func _ready() -> void:
 	drop_area.data_dropped.connect(_on_data_dropped)
@@ -121,11 +125,24 @@ func _swap_character(sprite: TextureRect, texture: Texture2D, side: String) -> v
 func _on_data_dropped(data: Variant, at_position: Vector2) -> void:
 	if data is SceneData:
 		set_scene(data)
+		_remember_drop(data, "scene")
 	elif data is CharacterData and background.texture:
-		add_character(data, _side_from_position(at_position))
+		var side := _side_from_position(at_position)
+		add_character(data, side)
+		_remember_drop(data, _side_name(side))
 	else:
 		return
 	item_dropped.emit()
+
+func _remember_drop(data: Variant, slot: String) -> void:
+	_last_drop = {"data": data, "slot": slot}
+	_forget_drop.call_deferred()
+
+func _forget_drop() -> void:
+	_last_drop = {}
+
+func _was_dropped_back(data: Variant, slot: String) -> bool:
+	return not _last_drop.is_empty() and _last_drop["data"] == data and _last_drop["slot"] == slot
 
 func _get_sprite(side: CharacterSide) -> TextureRect:
 	if side == CharacterSide.LEFT:
@@ -149,17 +166,23 @@ func _update_drag_sources() -> void:
 	sprite_left.set_drag_data(character_left)
 	sprite_right.set_drag_data(character_right)
 
-func _on_background_drag_finished(_data: Variant, _successful: bool) -> void:
+func _on_background_drag_finished(data: Variant, _successful: bool) -> void:
+	if _was_dropped_back(data, "scene"):
+		return
 	if character_left == null and character_right == null:
 		clear_frame()
 
-func _on_left_character_drag_finished(_data: Variant, _successful: bool) -> void:
+func _on_left_character_drag_finished(data: Variant, _successful: bool) -> void:
+	if _was_dropped_back(data, "left"):
+		return
 	character_left = null
 	sprite_left.texture = null
 	_update_drag_sources()
 	contents_changed.emit()
 
-func _on_right_character_drag_finished(_data: Variant, _successful: bool) -> void:
+func _on_right_character_drag_finished(data: Variant, _successful: bool) -> void:
+	if _was_dropped_back(data, "right"):
+		return
 	character_right = null
 	sprite_right.texture = null
 	_update_drag_sources()

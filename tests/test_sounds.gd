@@ -24,23 +24,30 @@ func _run() -> void:
 	await get_tree().process_frame
 	var frame := game.frames[0]
 
+	# Board evaluation is deferred to the end of the frame, hence the awaits
 	frame.set_scene(office)
 	frame.add_character(ada, LEFT)
+	await get_tree().process_frame
 	t.eq(played, [] as Array[String], "no sound while incomplete")
 
 	frame.add_character(charles, RIGHT)
+	await get_tree().process_frame
 	t.eq(played, ["floraphonic-rustling-bushes-dried-leaves-6-230205.mp3"] as Array[String], "M1 sound once")
 
 	played.clear()
 	frame.set_scene(office)
+	await get_tree().process_frame
 	t.eq(played, [] as Array[String], "same outcome does not replay")
 
 	frame.sprite_right.drag_finished.emit(charles, true)
+	await get_tree().process_frame
 	frame.add_character(charles, RIGHT)
+	await get_tree().process_frame
 	t.eq(played, ["floraphonic-rustling-bushes-dried-leaves-6-230205.mp3"] as Array[String], "M1 replays after leaving and coming back")
 
 	played.clear()
 	frame.set_scene(kitchen)
+	await get_tree().process_frame
 	t.eq(played, ["voiceofruthie-hmmmm-338158.mp3"] as Array[String], "doubt with Ada")
 
 	played.clear()

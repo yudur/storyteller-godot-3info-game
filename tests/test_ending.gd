@@ -34,15 +34,17 @@ func new_game() -> GameScreen:
 	return game
 
 func solve(game: GameScreen) -> void:
-	fill(game.frames[0], office, ada, charles)
-	fill(game.frames[1], office, ada, charles)
-	fill(game.frames[2], kitchen, charles, teapot)
-	fill(game.frames[3], office, ada, charles)
+	await fill(game.frames[0], office, ada, charles)
+	await fill(game.frames[1], office, ada, charles)
+	await fill(game.frames[2], kitchen, charles, teapot)
+	await fill(game.frames[3], office, ada, charles)
 
 func fill(frame: ComicFrame, scene: SceneData, left: CharacterData, right: CharacterData) -> void:
 	frame.set_scene(scene)
 	frame.add_character(left, LEFT)
 	frame.add_character(right, RIGHT)
+	# Board evaluation is deferred to the end of the frame
+	await get_tree().process_frame
 
 func wait(seconds: float) -> void:
 	await get_tree().create_timer(seconds).timeout
@@ -52,8 +54,8 @@ func test_ending_sequence() -> void:
 	await get_tree().process_frame
 	t.check(not game.completion_panel.visible, "panel hidden at start")
 
-	solve(game)
 	played.clear()
+	await solve(game)
 	for frame in game.frames:
 		t.check(not frame.drop_area.enabled, "frames locked during ending")
 	for item in game.shelf.get_children():
@@ -84,7 +86,7 @@ func test_ending_sequence() -> void:
 	for item in game.shelf.get_children():
 		t.eq(item.mouse_filter, Control.MOUSE_FILTER_STOP, "shelf interactive after reload")
 
-	solve(game)
+	await solve(game)
 	await wait(1.0)
 	t.check(game.completion_panel.visible, "ending plays again after reload")
 	game.queue_free()
@@ -93,7 +95,7 @@ func test_ending_sequence() -> void:
 func test_reload_cancels_ending() -> void:
 	var game := new_game()
 	await get_tree().process_frame
-	solve(game)
+	await solve(game)
 	game.load_story(game.story)
 	played.clear()
 	await wait(1.0)
@@ -110,7 +112,7 @@ func test_screen_manager_navigation() -> void:
 	await get_tree().process_frame
 	var game: GameScreen = manager.get_node("NextScreenViewportContainer/NextScreenViewport/GameScreen")
 
-	fill(game.frames[0], office, ada, charles)
+	await fill(game.frames[0], office, ada, charles)
 	manager.flip_page_next()
 	await wait(manager.flip_duration + 0.3)
 	t.check(game.frames[0].get_content().is_empty(), "entering the game resets the board")

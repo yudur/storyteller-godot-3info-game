@@ -76,6 +76,8 @@ func _play_scene_flip(direction: float) -> void:
 	SoundPlayer.play(SOUND_BOOK_OPEN if direction > 0.0 else SOUND_BOOK_CLOSE)
 	if direction > 0.0 and game_screen.story:
 		game_screen.load_story(game_screen.story)
+	elif direction < 0.0:
+		game_screen.cancel_ending()
 	screen_container.visible = false
 	next_screen_container.visible = false
 	next_screen_container.modulate.a = 0.0

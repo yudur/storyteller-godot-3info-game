@@ -1,5 +1,5 @@
 class_name LovelaceLogic
-extends StoryLogic
+extends MomentLogic
 
 const SOLUTION := ["M1", "M2", "M3", "M4"]
 
@@ -12,23 +12,11 @@ const MOMENTS := {
 }
 
 
-func evaluate(board: Array[FrameContent]) -> Array[FrameResult]:
-	var results: Array[FrameResult] = []
-	var previous: FrameResult = null
+func _solution() -> Array:
+	return SOLUTION
 
-	for i in board.size():
-		var result := _evaluate_frame(board[i], i, previous)
-		results.append(result)
-		previous = result
-
-	return results
-
-func is_solved(board: Array[FrameContent]) -> bool:
-	if board.size() != SOLUTION.size():
-		return false
-
-	var moments := evaluate(board).map(func(result: FrameResult) -> String: return result.moment)
-	return moments == SOLUTION
+func _moments() -> Dictionary:
+	return MOMENTS
 
 func ending(board: Array[FrameContent]) -> EndingData:
 	if not is_solved(board):
@@ -42,19 +30,7 @@ func ending(board: Array[FrameContent]) -> EndingData:
 	data.sounds.assign([])
 	return data
 
-func _evaluate_frame(content: FrameContent, index: int, previous: FrameResult) -> FrameResult:
-	var is_incomplete := content.scene == null or content.character_count() < 2
-	var previous_is_neutral := index > 0 and previous.state == FrameResult.State.NEUTRAL
-	if is_incomplete or previous_is_neutral:
-		return FrameResult.new()
-
-	var moment := _match_moment(content, index, previous)
-	if moment.is_empty():
-		return _doubt(content)
-	return _coherent(content, moment)
-
-func _match_moment(content: FrameContent, index: int, previous: FrameResult) -> String:
-	var previous_moment := previous.moment if previous else ""
+func _match_moment(content: FrameContent, index: int, previous_moment: String) -> String:
 	var scene_id := content.scene.id
 
 	if scene_id == "office" and _has_pair(content, "ada", "charles"):
@@ -69,19 +45,6 @@ func _match_moment(content: FrameContent, index: int, previous: FrameResult) -> 
 			return "M3"
 
 	return ""
-
-func _has_pair(content: FrameContent, first_id: String, second_id: String) -> bool:
-	return content.has_character(first_id) and content.has_character(second_id)
-
-func _coherent(content: FrameContent, moment: String) -> FrameResult:
-	var result := FrameResult.new()
-	var poses: Dictionary = MOMENTS[moment]["poses"]
-	result.state = FrameResult.State.COHERENT
-	result.moment = moment
-	result.scene_variant = MOMENTS[moment]["variant"]
-	result.left_pose = poses.get(content.left.id, "default")
-	result.right_pose = poses.get(content.right.id, "default")
-	return result
 
 func _doubt(content: FrameContent) -> FrameResult:
 	var result := FrameResult.new()

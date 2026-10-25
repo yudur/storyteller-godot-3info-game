@@ -3,6 +3,8 @@ extends Control
 
 signal data_dropped(data: Variant, position: Vector2)
 
+var enabled := true
+
 func _ready() -> void:
 	SignalBus.drag_is_active.connect(_on_drag_is_active)
 	_on_drag_is_active(false)
@@ -15,7 +17,7 @@ func _on_drag_is_active(is_active: bool) -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP if is_active else Control.MOUSE_FILTER_IGNORE
 
 func _can_drop_data(_at_position: Vector2, data: Variant) -> bool:
-	return data is CharacterData or data is SceneData
+	return enabled and (data is CharacterData or data is SceneData)
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
 	data_dropped.emit(data, at_position)

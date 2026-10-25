@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StoryData" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://core/resources/story_data.gd" id="1_story"]
+[ext_resource type="Script" path="res://core/story_logic/lovelace_logic.gd" id="2_logic"]
+[ext_resource type="Resource" path="res://data/characters/ada.tres" id="3_ada"]
+[ext_resource type="Resource" path="res://data/characters/charles.tres" id="4_charles"]
+[ext_resource type="Resource" path="res://data/characters/teapot.tres" id="5_teapot"]
+[ext_resource type="Resource" path="res://data/scenes/office.tres" id="6_office"]
+[ext_resource type="Resource" path="res://data/scenes/kitchen.tres" id="7_kitchen"]
+
+[resource]
+script = ExtResource("1_story")
+id = "lovelace_notes"
+title = "As notas de Lovelace"
+number_of_frames = 4
+draggable_items = Array[Resource]([ExtResource("3_ada"), ExtResource("4_charles"), ExtResource("5_teapot"), ExtResource("6_office"), ExtResource("7_kitchen")])
+logic = ExtResource("2_logic")

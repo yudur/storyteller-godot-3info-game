@@ -14,6 +14,9 @@ var _drag_is_active := false
 func _ready() -> void:
 	_update_label()
 
+func set_interactive(enabled: bool) -> void:
+	mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
+
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed and data:

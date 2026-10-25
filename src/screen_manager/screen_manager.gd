@@ -15,6 +15,7 @@ const SOUND_BOOK_CLOSE := preload("res://assets/sounds/oxidvideos-book-closing-4
 @onready var physical_page: PageFlipMesh = $pageMesh
 @onready var flip_back_button: Button = $FlipBackButton
 @onready var flip_next_button: Button = $FlipNextButton
+@onready var game_screen: GameScreen = $NextScreenViewportContainer/NextScreenViewport/GameScreen
 
 var _is_flipping := false
 var _flip_direction := 1.0
@@ -26,6 +27,7 @@ var _current_is_start := true
 func _ready() -> void:
 	flip_back_button.pressed.connect(flip_page_back)
 	flip_next_button.pressed.connect(flip_page_next)
+	game_screen.back_to_menu_requested.connect(flip_page_back)
 	await get_tree().process_frame
 
 	var book_size := screen_container.size
@@ -72,6 +74,8 @@ func _play_scene_flip(direction: float) -> void:
 	_is_flipping = true
 	_flip_direction = direction
 	SoundPlayer.play(SOUND_BOOK_OPEN if direction > 0.0 else SOUND_BOOK_CLOSE)
+	if direction > 0.0 and game_screen.story:
+		game_screen.load_story(game_screen.story)
 	screen_container.visible = false
 	next_screen_container.visible = false
 	next_screen_container.modulate.a = 0.0

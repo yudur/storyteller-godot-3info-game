@@ -74,6 +74,18 @@ func apply_result(result: FrameResult) -> void:
 		_swap_character(sprite_right, character_right.get_pose(result.right_pose), "right")
 	doubt_icon.visible = result.show_doubt_icon
 
+func apply_ending(ending: EndingData) -> void:
+	if current_scene:
+		_swap_background(current_scene.get_variant(ending.scene_variant))
+	if character_left:
+		_swap_character(sprite_left, character_left.get_pose(ending.left_pose), "left")
+	if character_right:
+		_swap_character(sprite_right, character_right.get_pose(ending.right_pose), "right")
+	doubt_icon.visible = false
+
+func highlight() -> void:
+	animator.pulse(self)
+
 func set_interactive(enabled: bool) -> void:
 	var filter := Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
 	background_drag.mouse_filter = filter

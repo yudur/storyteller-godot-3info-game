@@ -3,15 +3,19 @@ extends Node
 
 @export var scene_fade_duration := 0.5
 @export var character_fade_duration := 0.4
+@export var pulse_duration := 0.4
+@export var pulse_scale := 1.08
 
 var _scene_tween: Tween
 var _left_character_tween: Tween
 var _right_character_tween: Tween
+var _pulse_tween: Tween
 
 func reset() -> void:
 	_kill_tween(_scene_tween)
 	_kill_tween(_left_character_tween)
 	_kill_tween(_right_character_tween)
+	_kill_tween(_pulse_tween)
 	_scene_tween = null
 	_left_character_tween = null
 	_right_character_tween = null
@@ -35,6 +39,14 @@ func fade_in_character(sprite: TextureRect, side: String) -> void:
 	tween = create_tween()
 	tween.tween_property(sprite, "modulate:a", 1.0, character_fade_duration)
 	_set_character_tween(side, tween)
+
+func pulse(target: Control) -> void:
+	_kill_tween(_pulse_tween)
+	target.pivot_offset = target.size * 0.5
+	target.scale = Vector2.ONE
+	_pulse_tween = create_tween()
+	_pulse_tween.tween_property(target, "scale", Vector2.ONE * pulse_scale, pulse_duration * 0.5)
+	_pulse_tween.tween_property(target, "scale", Vector2.ONE, pulse_duration * 0.5)
 
 func _get_character_tween(side: String) -> Tween:
 	if side == "left":

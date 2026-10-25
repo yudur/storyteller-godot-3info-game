@@ -66,10 +66,10 @@ func test_ending_sequence() -> void:
 
 	await wait(1.0)
 	t.eq(played.count(CAMERA), 4, "one camera click per frame")
-	t.check(played.has("freesound_community-woman_laughs-37559.mp3"), "Ada laughs")
-	t.check(played.has("floraphonic-man-laughs-2-190296.mp3"), "Charles laughs")
+	t.check(not played.has("freesound_community-woman_laughs-37559.mp3"), "no woman laugh")
+	t.check(not played.has("floraphonic-man-laughs-2-190296.mp3"), "no man laugh")
 	t.eq(played.back() if not played.is_empty() else "", BELL, "bell plays last")
-	t.eq(played.size(), 7, "only ending sounds play")
+	t.eq(played.size(), 5, "only camera clicks and the bell play")
 	t.eq(game.frames[3].sprite_left.texture, ada.poses["laughing"], "Q4 Ada laughing")
 	t.eq(game.frames[3].sprite_right.texture, charles.poses["laughing"], "Q4 Charles laughing")
 	t.eq(game.frames[3].background.texture, office.variants["papers"], "Q4 papers in ending")

@@ -148,7 +148,7 @@ func test_ending() -> void:
 		t.eq(ending.frame_index, 3, "ending frame")
 		t.eq(ending.scene_variant, "papers", "ending background")
 		t.eq([ending.left_pose, ending.right_pose], ["laughing", "laughing"], "ending poses")
-		t.eq(ending.sounds.size(), 2, "ending sounds")
+		t.eq(ending.sounds.size(), 0, "ending has no sounds")
 
 	var swapped := logic.ending(swapped_solution())
 	t.check(swapped != null and swapped.left_pose == "laughing" and swapped.right_pose == "laughing", "swapped ending poses")

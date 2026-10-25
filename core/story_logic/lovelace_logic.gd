@@ -11,8 +11,6 @@ const MOMENTS := {
 	"M4": {"variant": "papers", "poses": {"ada": "pile", "charles": "scared_cup"}},
 }
 
-const SOUND_WOMAN_LAUGH := preload("res://assets/sounds/freesound_community-woman_laughs-37559.mp3")
-const SOUND_MAN_LAUGH := preload("res://assets/sounds/floraphonic-man-laughs-2-190296.mp3")
 
 func evaluate(board: Array[FrameContent]) -> Array[FrameResult]:
 	var results: Array[FrameResult] = []
@@ -41,7 +39,7 @@ func ending(board: Array[FrameContent]) -> EndingData:
 	data.scene_variant = "papers"
 	data.left_pose = "laughing"
 	data.right_pose = "laughing"
-	data.sounds.assign([SOUND_WOMAN_LAUGH, SOUND_MAN_LAUGH])
+	data.sounds.assign([])
 	return data
 
 func _evaluate_frame(content: FrameContent, index: int, previous: FrameResult) -> FrameResult:

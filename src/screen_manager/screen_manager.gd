@@ -77,8 +77,11 @@ func _ready() -> void:
 	_containers[_front].visible = true
 	_containers[_back].visible = false
 
+func can_navigate_to(index: int) -> bool:
+	return not _is_flipping and index != _current_index and index >= 0 and index < _screens.size()
+
 func navigate_to(index: int) -> void:
-	if _is_flipping or index == _current_index or index < 0 or index >= _screens.size():
+	if not can_navigate_to(index):
 		return
 
 	_is_flipping = true
@@ -116,7 +119,13 @@ func navigate_to(index: int) -> void:
 	tween.tween_method(_apply_flip_progress, 0.0, 1.0, flip_duration)
 	tween.finished.connect(_finish_flip.bind(index))
 
+# The incoming page is visible and clickable for the second half of a flip, so
+# a chapter can be pressed while one is still turning. Asking first keeps the
+# board and the story from ending up on different chapters
 func _on_phase_selected(story: StoryData) -> void:
+	if not can_navigate_to(Screen.GAME):
+		return
+
 	game_screen.story = story
 	navigate_to(Screen.GAME)
 

@@ -35,6 +35,7 @@ func _run() -> void:
 	await test_returning_to_the_start_screen_clears_progress()
 	await test_leaving_mid_ending_completes_nothing()
 	await test_reentering_a_phase_starts_clean()
+	await test_phase_selected_during_a_flip_changes_nothing()
 	t.finish(get_tree())
 
 func new_menu(stories: Array[StoryData]) -> MenuScreen:
@@ -191,13 +192,44 @@ func test_reentering_a_phase_starts_clean() -> void:
 	var manager := await new_manager()
 	await enter_chapter(manager)
 	var game := manager.game_screen
-	await fill(game.frames[0], office, ada, charles)
+	# Recapitulação lenta para o desfecho ainda estar correndo quando eu saio
+	game.recap_interval = 0.5
+	await solve(game)
 
 	game.get_node("BackButton").pressed.emit()
 	await wait(manager.flip_duration + 0.3)
 	chapter_button(manager).pressed.emit()
 	await wait(manager.flip_duration + 0.3)
 	t.check(game.frames[0].get_content().is_empty(), "board is clean on reentry")
-	t.check(game.frames[3].sprite_left.texture == null, "no pending ending applies poses")
+	t.eq(manager._current_index, ScreenManager.Screen.GAME, "reentry lands in the phase")
+
+	# Um tween sobrevivente do desfecho abandonado dispararia nesta janela: o
+	# sino tocaria e o `back_requested` final expulsaria o jogador da fase que
+	# ele acabou de reabrir. Asserções sobre os quadros não pegariam isso,
+	# porque load_story já os substituiu por quadros novos e vazios
+	played.clear()
+	await wait(0.5 * 4.0 + game.ending_hold + 0.6)
+	t.eq(played.count(BELL), 0, "the abandoned ending never fires")
+	t.eq(manager._current_index, ScreenManager.Screen.GAME, "still in the phase afterwards")
+	manager.queue_free()
+	await get_tree().process_frame
+
+# Achado da revisão: `_on_phase_selected` escrevia `game_screen.story` antes de
+# `navigate_to` poder recusar a navegação, então um clique durante uma virada
+# ficava com o tabuleiro de um capítulo e a história de outro
+func test_phase_selected_during_a_flip_changes_nothing() -> void:
+	var manager := await new_manager()
+	manager.navigate_to(ScreenManager.Screen.MENU)
+	await wait(manager.flip_duration + 0.3)
+	var kept: StoryData = manager.game_screen.story
+	var other := StoryData.new()
+	other.id = "outro_capitulo"
+	other.title = "Outro capítulo"
+
+	manager.navigate_to(ScreenManager.Screen.START)
+	manager.menu_screen.phase_selected.emit(other)
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager._current_index, ScreenManager.Screen.START, "the dropped selection did not navigate")
+	t.check(manager.game_screen.story == kept, "the dropped selection did not swap the story")
 	manager.queue_free()
 	await get_tree().process_frame

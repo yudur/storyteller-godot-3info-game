@@ -1,19 +1,17 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3 uid="uid://ece0owcwc3qy"]
 
-[ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles Default.png" id="2_default"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles com Prancheta de artigos .png" id="3_clipboard"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles com xícara.png" id="4_cup"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles Assustado com a xícara.png" id="5_scared_cup"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles Rindo.png" id="6_laughing"]
-
-[ext_resource type="Texture2D" path="res://assets/sprites/draggables/charactericon_charles.png" id="9_icon"]
+[ext_resource type="Script" uid="uid://lywddvaxagxe" path="res://core/resources/character_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dp6i5x2e7sxcf" path="res://assets/sprites/characters/Charles Default.png" id="2_default"]
+[ext_resource type="Texture2D" uid="uid://dkoslp65swpbr" path="res://assets/sprites/characters/Charles com Prancheta de artigos .png" id="3_clipboard"]
+[ext_resource type="Texture2D" uid="uid://c0o87xgmtfs08" path="res://assets/sprites/characters/Charles com xícara.png" id="4_cup"]
+[ext_resource type="Texture2D" uid="uid://debdpms4tiiwk" path="res://assets/sprites/characters/Charles Assustado com a xícara.png" id="5_scared_cup"]
+[ext_resource type="Texture2D" uid="uid://c8clm1b8b2sp3" path="res://assets/sprites/characters/Charles Rindo.png" id="6_laughing"]
+[ext_resource type="Texture2D" uid="uid://co8y3qtflg5je" path="res://assets/sprites/draggables/charactericon_charles.png" id="9_icon"]
 
 [resource]
 script = ExtResource("1_script")
 id = "charles"
 display_name = "Charles Babbage"
-icon = ExtResource("9_icon")
 poses = Dictionary[String, Texture2D]({
 "clipboard": ExtResource("3_clipboard"),
 "cup": ExtResource("4_cup"),
@@ -21,3 +19,4 @@ poses = Dictionary[String, Texture2D]({
 "laughing": ExtResource("6_laughing"),
 "scared_cup": ExtResource("5_scared_cup")
 })
+icon = ExtResource("9_icon")

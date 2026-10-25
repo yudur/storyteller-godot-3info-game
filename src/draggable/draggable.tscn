@@ -6,7 +6,7 @@
 custom_minimum_size = Vector2(96, 120)
 offset_right = 96.0
 offset_bottom = 120.0
-color = Color(0.5529412, 1, 1, 1)
+color = Color(0.9109043, 0.91385174, 0.90375376, 0)
 script = ExtResource("1_kga1i")
 
 [node name="Content" type="VBoxContainer" parent="."]

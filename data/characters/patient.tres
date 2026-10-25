@@ -1,19 +1,18 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=6 format=3 uid="uid://b01n8qbsyhc15"]
 
-[ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Cadeirante default.png" id="2_default"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Cadeirante esperançoso.png" id="3_hopeful"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Cadeirante curado .png" id="4_cured"]
-
-[ext_resource type="Texture2D" path="res://assets/sprites/draggables/charactericon_patient.png" id="9_icon"]
+[ext_resource type="Script" uid="uid://lywddvaxagxe" path="res://core/resources/character_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://d2comnf7s22le" path="res://assets/sprites/characters/Cadeirante default.png" id="2_default"]
+[ext_resource type="Texture2D" uid="uid://cor288tmmk8pm" path="res://assets/sprites/characters/Cadeirante esperançoso.png" id="3_hopeful"]
+[ext_resource type="Texture2D" uid="uid://b5rqxqpraj70e" path="res://assets/sprites/characters/Cadeirante curado .png" id="4_cured"]
+[ext_resource type="Texture2D" uid="uid://q78egbelg0mp" path="res://assets/sprites/draggables/charactericon_patient.png" id="9_icon"]
 
 [resource]
 script = ExtResource("1_script")
 id = "patient"
 display_name = "Cadeirante"
-icon = ExtResource("9_icon")
 poses = Dictionary[String, Texture2D]({
 "cured": ExtResource("4_cured"),
 "default": ExtResource("2_default"),
 "hopeful": ExtResource("3_hopeful")
 })
+icon = ExtResource("9_icon")

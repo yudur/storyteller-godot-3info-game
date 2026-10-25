@@ -6,15 +6,13 @@
 [ext_resource type="Texture2D" uid="uid://bsxwfvabwb7ps" path="res://assets/sprites/characters/Tatiana Sampaio no microscópio.png" id="4_microscope"]
 [ext_resource type="Texture2D" uid="uid://c701r6fkgavcr" path="res://assets/sprites/characters/Tatiana Sampaio com seringa.png" id="5_syringe"]
 [ext_resource type="Texture2D" uid="uid://cnqta1d11wukn" path="res://assets/sprites/characters/Tatiana Sampaio com seringa e exames.png" id="7_happy"]
-
-[ext_resource type="Texture2D" path="res://assets/sprites/draggables/charactericon_tatiana.png" id="9_icon"]
+[ext_resource type="Texture2D" uid="uid://b5r84nunc850t" path="res://assets/sprites/draggables/charactericon_tatiana.png" id="9_icon"]
 
 [resource]
 script = ExtResource("1_script")
 id = "tatiana"
 display_name = "Tatiana Sampaio"
 faces_right = true
-icon = ExtResource("9_icon")
 poses = Dictionary[String, Texture2D]({
 "default": ExtResource("2_default"),
 "exams": ExtResource("3_exams"),
@@ -22,3 +20,4 @@ poses = Dictionary[String, Texture2D]({
 "microscope": ExtResource("4_microscope"),
 "syringe": ExtResource("5_syringe")
 })
+icon = ExtResource("9_icon")

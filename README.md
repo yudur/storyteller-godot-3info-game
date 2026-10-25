@@ -63,6 +63,19 @@ A cena principal é `src/screen_manager/screen_manager.tscn`. O fluxo é
 **tela inicial → menu de capítulos → jogo**, e cada transição é uma virada de
 página de verdade, feita com shader sobre dois `SubViewport`.
 
+## Executáveis
+
+A pasta `executables/` contém as versões exportadas do jogo para distribuição:
+
+- `executables/win/` — build para Windows 64-bit, com o executável `.exe` e
+  seu arquivo de dados `.pck`.
+- `executables/linux/` — build para Linux 64-bit, com o binário `.x86_64`,
+  seu arquivo de dados `.pck` e um script `.sh` para iniciar o jogo.
+
+Para gerar novamente essas builds no Godot 4.5, use os presets definidos em
+`export_presets.cfg`. Os arquivos exportados são gravados automaticamente nos
+respectivos diretórios dentro de `executables/`.
+
 ## Testes
 
 Todos os testes rodam headless, sem interface:
@@ -94,6 +107,7 @@ src/screen_manager/ navegação e a virada de página
 common/             autoloads: SignalBus (drag) e SoundPlayer (pool de áudio)
 data/               as fases e seus personagens/cenários, em .tres
 assets/             sprites, sons, fontes, shaders, temas
+executables/        builds exportadas para Windows e Linux
 tests/              testes headless + run_all.sh
 docs/superpowers/   especificações de design e planos de implementação
 ```

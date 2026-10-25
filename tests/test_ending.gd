@@ -25,6 +25,9 @@ func _run() -> void:
 	await test_reload_cancels_ending()
 	await test_back_button_does_not_complete()
 	await test_screen_manager_navigation()
+	await test_navigating_during_a_flip_is_ignored()
+	await test_navigating_out_of_range_is_ignored()
+	await test_round_trips_keep_one_parent_per_screen()
 	t.finish(get_tree())
 
 func new_game() -> GameScreen:
@@ -121,23 +124,65 @@ func test_back_button_does_not_complete() -> void:
 	game.queue_free()
 	await get_tree().process_frame
 
-func test_screen_manager_navigation() -> void:
+func new_manager() -> ScreenManager:
 	var manager: ScreenManager = load("res://src/screen_manager/screen_manager.tscn").instantiate()
 	add_child(manager)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	manager.game_screen.recap_interval = 0.05
+	manager.game_screen.ending_hold = 0.05
+	return manager
+
+func test_screen_manager_navigation() -> void:
+	var manager := await new_manager()
 	var game: GameScreen = manager.game_screen
-	game.recap_interval = 0.05
-	game.ending_hold = 0.05
 
 	await fill(game.frames[0], office, ada, charles)
-	manager.flip_page_next()
+	manager.navigate_to(1)
 	await wait(manager.flip_duration + 0.3)
 	t.check(game.frames[0].get_content().is_empty(), "entering the game resets the board")
-	t.check(not manager._current_is_start, "game page is showing")
+	t.eq(manager._current_index, 1, "game page is showing")
 
 	await solve(game)
 	await wait(1.0 + manager.flip_duration)
-	t.check(manager._current_is_start, "finishing the ending flips back to the start page")
+	t.eq(manager._current_index, 0, "finishing the ending flips back")
+	manager.queue_free()
+	await get_tree().process_frame
+
+func test_navigating_during_a_flip_is_ignored() -> void:
+	var manager := await new_manager()
+	manager.navigate_to(1)
+	manager.navigate_to(1)
+	manager.navigate_to(0)
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager._current_index, 1, "only the first navigation runs")
+	manager.queue_free()
+	await get_tree().process_frame
+
+func test_navigating_out_of_range_is_ignored() -> void:
+	var manager := await new_manager()
+	manager.navigate_to(-1)
+	manager.navigate_to(manager._screens.size())
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager._current_index, 0, "out of range does nothing")
+	manager.queue_free()
+	await get_tree().process_frame
+
+func test_round_trips_keep_one_parent_per_screen() -> void:
+	var manager := await new_manager()
+	for index in [1, 0, 1, 0]:
+		manager.navigate_to(index)
+		await wait(manager.flip_duration + 0.3)
+
+	t.eq(manager._current_index, 0, "back on the first screen")
+	for index in manager._screens.size():
+		var screen: Control = manager._screens[index]
+		var parent := screen.get_parent()
+		if index == manager._current_index:
+			t.check(parent is SubViewport, "the visible screen sits in a viewport")
+			t.check(screen.visible, "the visible screen is shown")
+		else:
+			t.eq(parent.name, &"Screens", "parked screens live in Screens")
+			t.check(not screen.visible, "parked screens are hidden")
 	manager.queue_free()
 	await get_tree().process_frame

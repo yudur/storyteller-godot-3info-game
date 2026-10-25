@@ -54,9 +54,9 @@ func _run() -> void:
 	add_child(manager)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	manager.flip_page_next()
+	manager.navigate_to(manager._screens.size() - 1)
 	await get_tree().create_timer(manager.flip_duration + 0.3).timeout
-	manager.flip_page_back()
+	manager.navigate_to(manager._current_index - 1)
 	await get_tree().create_timer(manager.flip_duration + 0.3).timeout
 	t.eq(played, [] as Array[String], "page flips are silent")
 

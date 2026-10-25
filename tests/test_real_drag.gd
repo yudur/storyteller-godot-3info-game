@@ -110,7 +110,7 @@ func test_leaving_mid_ending_stops_it() -> void:
 	await get_tree().process_frame
 	var game := manager.game_screen
 
-	manager.flip_page_next()
+	manager.navigate_to(manager._screens.size() - 1)
 	await get_tree().create_timer(manager.flip_duration + 0.3).timeout
 	var f := game.frames
 	await fill(f[0], office, ada, charles)
@@ -118,7 +118,7 @@ func test_leaving_mid_ending_stops_it() -> void:
 	await fill(f[2], kitchen, charles, teapot)
 	await fill(f[3], office, ada, charles)
 
-	manager.flip_page_back()
+	manager.navigate_to(manager._current_index - 1)
 	played.clear()
 	await get_tree().create_timer(5.0).timeout
 	t.eq(played.count("soundreality-bell-sound-effect-613873.mp3"), 0, "no bell over the menu")

@@ -31,6 +31,8 @@ func _run() -> void:
 	await test_empty_stories()
 	await test_back_button()
 	await test_back_button_is_compact()
+	await test_two_chapters()
+	await test_switching_chapters_rebuilds_the_board()
 	await test_completing_a_chapter_returns_to_the_menu_marked()
 	await test_returning_to_the_start_screen_clears_progress()
 	await test_leaving_mid_ending_completes_nothing()
@@ -126,8 +128,41 @@ func new_manager() -> ScreenManager:
 func wait(seconds: float) -> void:
 	await get_tree().create_timer(seconds).timeout
 
-func chapter_button(manager: ScreenManager) -> Button:
-	return manager.menu_screen.phase_list.get_child(0)
+func chapter_button(manager: ScreenManager, index := 0) -> Button:
+	return manager.menu_screen.phase_list.get_child(index)
+
+# O menu com o array `stories` que a própria cena declara, sem substituir
+func scene_menu() -> MenuScreen:
+	var menu: MenuScreen = load("res://src/screens/menu_screen/menu_screen.tscn").instantiate()
+	add_child(menu)
+	return menu
+
+func test_two_chapters() -> void:
+	var menu := scene_menu()
+	var buttons := rows(menu)
+	t.eq(buttons.size(), 2, "two chapter rows")
+	t.eq(buttons[1].text, "Capítulo 2", "second chapter label")
+	t.eq(buttons[1].tooltip_text, "Tatiana Sampaio ajuda um cadeirante", "second tooltip")
+	await drop(menu)
+
+func test_switching_chapters_rebuilds_the_board() -> void:
+	var manager := await new_manager()
+	manager.navigate_to(ScreenManager.Screen.MENU)
+	await wait(manager.flip_duration + 0.3)
+	chapter_button(manager, 0).pressed.emit()
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager.game_screen.frames.size(), 4, "phase 1 has four frames")
+
+	manager.game_screen.get_node("BackButton").pressed.emit()
+	await wait(manager.flip_duration + 0.3)
+	chapter_button(manager, 1).pressed.emit()
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager._current_index, ScreenManager.Screen.GAME, "chapter 2 opens the game")
+	t.eq(manager.game_screen.story.id, "tatiana_protein", "phase 2 story is loaded")
+	t.eq(manager.game_screen.frames.size(), 3, "phase 2 has three frames")
+	t.eq(manager.game_screen.shelf.get_child_count(), 5, "phase 2 shelf has five pieces")
+	manager.queue_free()
+	await get_tree().process_frame
 
 func fill(frame: ComicFrame, scene: SceneData, left: CharacterData, right: CharacterData) -> void:
 	frame.set_scene(scene)
@@ -155,7 +190,8 @@ func test_completing_a_chapter_returns_to_the_menu_marked() -> void:
 	await solve(manager.game_screen)
 	await wait(1.0 + manager.flip_duration)
 	t.eq(manager._current_index, ScreenManager.Screen.MENU, "the ending lands on the menu")
-	t.eq(chapter_button(manager).icon, CHECKED, "chapter 1 is marked")
+	t.eq(chapter_button(manager, 0).icon, CHECKED, "chapter 1 is marked")
+	t.eq(chapter_button(manager, 1).icon, UNCHECKED, "chapter 2 is not marked")
 	manager.queue_free()
 	await get_tree().process_frame
 

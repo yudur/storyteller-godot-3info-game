@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://nmi7d4qbgjtq"]
+[gd_scene load_steps=5 format=3 uid="uid://nmi7d4qbgjtq"]
 
 [ext_resource type="Script" path="res://src/screens/menu_screen/menu_screen.gd" id="1_menu"]
 [ext_resource type="Theme" uid="uid://bygmqgj2ibk41" path="res://assets/themes/button-theme.tres" id="2_button_theme"]
 [ext_resource type="Resource" path="res://data/stories/lovelace_notes.tres" id="3_story"]
+[ext_resource type="Resource" path="res://data/stories/tatiana_protein.tres" id="4_story2"]
 
 [node name="MenuScreen" type="Control"]
 layout_mode = 3
@@ -12,7 +13,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
-stories = Array[StoryData]([ExtResource("3_story")])
+stories = Array[StoryData]([ExtResource("3_story"), ExtResource("4_story2")])
 
 [node name="RightPanel" type="Control" parent="."]
 layout_mode = 1

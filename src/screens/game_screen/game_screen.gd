@@ -1,7 +1,8 @@
 class_name GameScreen
 extends Control
 
-signal back_to_menu_requested
+signal back_requested
+signal story_completed(story: StoryData)
 
 const SOUND_CAMERA := preload("res://assets/sounds/alex_jauk-camera-sound-236021.mp3")
 const SOUND_BELL := preload("res://assets/sounds/soundreality-bell-sound-effect-613873.mp3")
@@ -118,7 +119,13 @@ func _play_ending(ending: EndingData) -> void:
 	_ending_tween.tween_callback(SoundPlayer.play_all.bind(ending.sounds))
 	_ending_tween.tween_interval(ending_hold)
 	_ending_tween.tween_callback(SoundPlayer.play.bind(SOUND_BELL))
-	_ending_tween.tween_callback(back_to_menu_requested.emit)
+	# Announcing the completion before leaving lets the menu show the mark on
+	# the chapter as soon as it comes back on screen
+	_ending_tween.tween_callback(story_completed.emit.bind(story))
+	_ending_tween.tween_callback(back_requested.emit)
+
+func _on_back_pressed() -> void:
+	back_requested.emit()
 
 func _set_board_interactive(enabled: bool) -> void:
 	for frame in frames:

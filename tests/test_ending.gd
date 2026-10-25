@@ -23,6 +23,7 @@ func _run() -> void:
 	SoundPlayer.played.connect(func(stream: AudioStream) -> void: played.append(stream.resource_path.get_file()))
 	await test_ending_sequence()
 	await test_reload_cancels_ending()
+	await test_back_button_does_not_complete()
 	await test_screen_manager_navigation()
 	t.finish(get_tree())
 
@@ -54,7 +55,11 @@ func test_ending_sequence() -> void:
 	await get_tree().process_frame
 	t.check(not game.has_node("CompletionPanel"), "no completion panel")
 	var requested := [0]
-	game.back_to_menu_requested.connect(func() -> void: requested[0] += 1)
+	var events: Array = []
+	game.back_requested.connect(func() -> void:
+		requested[0] += 1
+		events.append("back"))
+	game.story_completed.connect(func(story: StoryData) -> void: events.append("completed:" + story.id))
 
 	played.clear()
 	await solve(game)
@@ -74,6 +79,7 @@ func test_ending_sequence() -> void:
 	t.eq(game.frames[3].sprite_right.texture, charles.poses["laughing"], "Q4 Charles laughing")
 	t.eq(game.frames[3].background.texture, office.variants["papers"], "Q4 papers in ending")
 	t.eq(requested[0], 1, "returns to menu once when the animation ends")
+	t.eq(events, ["completed:lovelace_notes", "back"], "completion is announced before leaving")
 
 	game.load_story(game.story)
 	await get_tree().process_frame
@@ -92,7 +98,7 @@ func test_reload_cancels_ending() -> void:
 	var game := new_game()
 	await get_tree().process_frame
 	var requested := [0]
-	game.back_to_menu_requested.connect(func() -> void: requested[0] += 1)
+	game.back_requested.connect(func() -> void: requested[0] += 1)
 	await solve(game)
 	game.load_story(game.story)
 	played.clear()
@@ -100,6 +106,18 @@ func test_reload_cancels_ending() -> void:
 	t.eq(requested[0], 0, "cancelled ending does not return to menu")
 	t.eq(played.count(BELL), 0, "cancelled ending plays no bell")
 	t.check(game.frames[3].sprite_left.texture == null, "cancelled ending leaves new board empty")
+	game.queue_free()
+	await get_tree().process_frame
+
+func test_back_button_does_not_complete() -> void:
+	var game := new_game()
+	await get_tree().process_frame
+	var events: Array = []
+	game.back_requested.connect(func() -> void: events.append("back"))
+	game.story_completed.connect(func(story: StoryData) -> void: events.append("completed:" + story.id))
+
+	game.get_node("BackButton").pressed.emit()
+	t.eq(events, ["back"], "leaving by button completes nothing")
 	game.queue_free()
 	await get_tree().process_frame
 

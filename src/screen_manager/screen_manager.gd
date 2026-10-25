@@ -25,7 +25,7 @@ var _current_is_start := true
 func _ready() -> void:
 	flip_back_button.pressed.connect(flip_page_back)
 	flip_next_button.pressed.connect(flip_page_next)
-	game_screen.back_to_menu_requested.connect(flip_page_back)
+	game_screen.back_requested.connect(flip_page_back)
 	await get_tree().process_frame
 
 	var book_size := screen_container.size

@@ -11,22 +11,8 @@ const MOMENTS := {
 	"M4": {"variant": "papers", "poses": {"ada": "pile", "charles": "scared_cup"}},
 }
 
-const SOUND_PAPER := preload("res://assets/sounds/floraphonic-rustling-bushes-dried-leaves-6-230205.mp3")
-const SOUND_PENCIL := preload("res://assets/sounds/u_xg7ssi08yr-writing-with-pencil-371358.mp3")
-const SOUND_TEA := preload("res://assets/sounds/freesound_community-pouring-tea-70635.mp3")
-const SOUND_SURPRISE := preload("res://assets/sounds/universfield-male-surprise-reaction-242637.mp3")
-const SOUND_GLASS := preload("res://assets/sounds/vidro-quebrando.mp3")
-const SOUND_DOUBT_ADA := preload("res://assets/sounds/voiceofruthie-hmmmm-338158.mp3")
-const SOUND_DOUBT := preload("res://assets/sounds/freesound_community-hmms-various-1-7175.mp3")
 const SOUND_WOMAN_LAUGH := preload("res://assets/sounds/freesound_community-woman_laughs-37559.mp3")
 const SOUND_MAN_LAUGH := preload("res://assets/sounds/floraphonic-man-laughs-2-190296.mp3")
-
-const MOMENT_SOUNDS := {
-	"M1": [SOUND_PAPER],
-	"M2": [SOUND_PENCIL],
-	"M3": [SOUND_TEA],
-	"M4": [SOUND_SURPRISE, SOUND_GLASS],
-}
 
 func evaluate(board: Array[FrameContent]) -> Array[FrameResult]:
 	var results: Array[FrameResult] = []
@@ -97,7 +83,6 @@ func _coherent(content: FrameContent, moment: String) -> FrameResult:
 	result.scene_variant = MOMENTS[moment]["variant"]
 	result.left_pose = poses.get(content.left.id, "default")
 	result.right_pose = poses.get(content.right.id, "default")
-	result.sounds.assign(MOMENT_SOUNDS[moment])
 	return result
 
 func _doubt(content: FrameContent) -> FrameResult:
@@ -105,5 +90,4 @@ func _doubt(content: FrameContent) -> FrameResult:
 	result.state = FrameResult.State.DOUBT
 	result.left_pose = "doubt" if content.left.id == "ada" else "default"
 	result.right_pose = "doubt" if content.right.id == "ada" else "default"
-	result.sounds.assign([SOUND_DOUBT_ADA if content.has_character("ada") else SOUND_DOUBT])
 	return result

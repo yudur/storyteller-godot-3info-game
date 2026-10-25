@@ -1,6 +1,6 @@
 extends Node
 
-# Ending sequence, completion panel and return to menu. Runs as a scene for autoloads
+# Ending sequence and automatic return to the start screen. Runs as a scene for autoloads
 
 var t := TestUtils.new()
 var played: Array[String] = []
@@ -52,7 +52,9 @@ func wait(seconds: float) -> void:
 func test_ending_sequence() -> void:
 	var game := new_game()
 	await get_tree().process_frame
-	t.check(not game.completion_panel.visible, "panel hidden at start")
+	t.check(not game.has_node("CompletionPanel"), "no completion panel")
+	var requested := [0]
+	game.back_to_menu_requested.connect(func() -> void: requested[0] += 1)
 
 	played.clear()
 	await solve(game)
@@ -60,27 +62,21 @@ func test_ending_sequence() -> void:
 		t.check(not frame.drop_area.enabled, "frames locked during ending")
 	for item in game.shelf.get_children():
 		t.eq(item.mouse_filter, Control.MOUSE_FILTER_IGNORE, "shelf locked during ending")
+	t.eq(requested[0], 0, "no return to menu before the animation ends")
 
 	await wait(1.0)
 	t.eq(played.count(CAMERA), 4, "one camera click per frame")
 	t.check(played.has("freesound_community-woman_laughs-37559.mp3"), "Ada laughs")
 	t.check(played.has("floraphonic-man-laughs-2-190296.mp3"), "Charles laughs")
 	t.eq(played.back() if not played.is_empty() else "", BELL, "bell plays last")
+	t.eq(played.size(), 7, "only ending sounds play")
 	t.eq(game.frames[3].sprite_left.texture, ada.poses["laughing"], "Q4 Ada laughing")
 	t.eq(game.frames[3].sprite_right.texture, charles.poses["laughing"], "Q4 Charles laughing")
 	t.eq(game.frames[3].background.texture, office.variants["papers"], "Q4 papers in ending")
-	t.check(game.completion_panel.visible, "panel shown")
-	t.eq(game.completion_label.text, "Fase concluída", "panel text")
-	t.eq(game.back_button.text, "Voltar ao menu", "button text")
-
-	var requested := [false]
-	game.back_to_menu_requested.connect(func() -> void: requested[0] = true)
-	game.back_button.pressed.emit()
-	t.check(requested[0], "button requests menu")
+	t.eq(requested[0], 1, "returns to menu once when the animation ends")
 
 	game.load_story(game.story)
 	await get_tree().process_frame
-	t.check(not game.completion_panel.visible, "panel hidden after reload")
 	t.check(game.frames[0].get_content().is_empty(), "board clean after reload")
 	t.check(game.frames[0].drop_area.enabled, "frames interactive after reload")
 	for item in game.shelf.get_children():
@@ -88,18 +84,20 @@ func test_ending_sequence() -> void:
 
 	await solve(game)
 	await wait(1.0)
-	t.check(game.completion_panel.visible, "ending plays again after reload")
+	t.eq(requested[0], 2, "ending plays again after reload")
 	game.queue_free()
 	await get_tree().process_frame
 
 func test_reload_cancels_ending() -> void:
 	var game := new_game()
 	await get_tree().process_frame
+	var requested := [0]
+	game.back_to_menu_requested.connect(func() -> void: requested[0] += 1)
 	await solve(game)
 	game.load_story(game.story)
 	played.clear()
 	await wait(1.0)
-	t.check(not game.completion_panel.visible, "cancelled ending shows no panel")
+	t.eq(requested[0], 0, "cancelled ending does not return to menu")
 	t.eq(played.count(BELL), 0, "cancelled ending plays no bell")
 	t.check(game.frames[3].sprite_left.texture == null, "cancelled ending leaves new board empty")
 	game.queue_free()
@@ -110,15 +108,18 @@ func test_screen_manager_navigation() -> void:
 	add_child(manager)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var game: GameScreen = manager.get_node("NextScreenViewportContainer/NextScreenViewport/GameScreen")
+	var game: GameScreen = manager.game_screen
+	game.recap_interval = 0.05
+	game.ending_hold = 0.05
 
 	await fill(game.frames[0], office, ada, charles)
 	manager.flip_page_next()
 	await wait(manager.flip_duration + 0.3)
 	t.check(game.frames[0].get_content().is_empty(), "entering the game resets the board")
+	t.check(not manager._current_is_start, "game page is showing")
 
-	game.back_to_menu_requested.emit()
-	await wait(manager.flip_duration + 0.3)
-	t.check(manager._current_is_start, "back to menu flips to the start page")
+	await solve(game)
+	await wait(1.0 + manager.flip_duration)
+	t.check(manager._current_is_start, "finishing the ending flips back to the start page")
 	manager.queue_free()
 	await get_tree().process_frame

@@ -1,6 +1,7 @@
 extends Node
 
-# Which sounds play, and when. Runs as a scene so the SoundPlayer autoload exists
+# Only the ending makes sound: playing the board and flipping pages stay silent.
+# Runs as a scene so the SoundPlayer autoload exists
 
 var t := TestUtils.new()
 var played: Array[String] = []
@@ -9,6 +10,7 @@ var office: SceneData = load("res://data/scenes/office.tres")
 var kitchen: SceneData = load("res://data/scenes/kitchen.tres")
 var ada: CharacterData = load("res://data/characters/ada.tres")
 var charles: CharacterData = load("res://data/characters/charles.tres")
+var teapot: CharacterData = load("res://data/characters/teapot.tres")
 
 const LEFT := ComicFrame.CharacterSide.LEFT
 const RIGHT := ComicFrame.CharacterSide.RIGHT
@@ -22,37 +24,29 @@ func _run() -> void:
 	var game: GameScreen = load("res://src/screens/game_screen/game_screen.tscn").instantiate()
 	add_child(game)
 	await get_tree().process_frame
-	var frame := game.frames[0]
+	var f := game.frames
 
 	# Board evaluation is deferred to the end of the frame, hence the awaits
-	frame.set_scene(office)
-	frame.add_character(ada, LEFT)
+	f[0].drop_area.data_dropped.emit(office, Vector2.ZERO)
+	f[0].add_character(ada, LEFT)
+	f[0].add_character(charles, RIGHT)
 	await get_tree().process_frame
-	t.eq(played, [] as Array[String], "no sound while incomplete")
+	t.eq(played, [] as Array[String], "drop and story moment are silent")
 
-	frame.add_character(charles, RIGHT)
+	f[1].set_scene(kitchen)
+	f[1].add_character(ada, LEFT)
+	f[1].add_character(charles, RIGHT)
 	await get_tree().process_frame
-	t.eq(played, ["floraphonic-rustling-bushes-dried-leaves-6-230205.mp3"] as Array[String], "M1 sound once")
+	t.check(f[1].doubt_icon.visible, "doubt still shows")
+	t.eq(played, [] as Array[String], "doubt is silent")
 
-	played.clear()
-	frame.set_scene(office)
+	f[1].set_scene(office)
 	await get_tree().process_frame
-	t.eq(played, [] as Array[String], "same outcome does not replay")
-
-	frame.sprite_right.drag_finished.emit(charles, true)
+	f[2].set_scene(kitchen)
+	f[2].add_character(charles, LEFT)
+	f[2].add_character(teapot, RIGHT)
 	await get_tree().process_frame
-	frame.add_character(charles, RIGHT)
-	await get_tree().process_frame
-	t.eq(played, ["floraphonic-rustling-bushes-dried-leaves-6-230205.mp3"] as Array[String], "M1 replays after leaving and coming back")
-
-	played.clear()
-	frame.set_scene(kitchen)
-	await get_tree().process_frame
-	t.eq(played, ["voiceofruthie-hmmmm-338158.mp3"] as Array[String], "doubt with Ada")
-
-	played.clear()
-	frame.drop_area.data_dropped.emit(office, Vector2.ZERO)
-	t.check(played.has("freesound_community-cartoon_boing-92413.mp3"), "drop plays boing")
+	t.eq(played, [] as Array[String], "M2 and M3 are silent")
 
 	game.queue_free()
 
@@ -60,13 +54,11 @@ func _run() -> void:
 	add_child(manager)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	played.clear()
 	manager.flip_page_next()
-	t.eq(played, ["soumages-book-opening-345808.mp3"] as Array[String], "flip forward opens book")
 	await get_tree().create_timer(manager.flip_duration + 0.3).timeout
-	played.clear()
 	manager.flip_page_back()
-	t.eq(played, ["oxidvideos-book-closing-466850.mp3"] as Array[String], "flip back closes book")
+	await get_tree().create_timer(manager.flip_duration + 0.3).timeout
+	t.eq(played, [] as Array[String], "page flips are silent")
 
 	manager.queue_free()
 	await get_tree().process_frame

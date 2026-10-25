@@ -14,7 +14,6 @@ var teapot: CharacterData = load("res://data/characters/teapot.tres")
 
 const LEFT := ComicFrame.CharacterSide.LEFT
 const RIGHT := ComicFrame.CharacterSide.RIGHT
-const BOING := "freesound_community-cartoon_boing-92413.mp3"
 
 func _ready() -> void:
 	_run.call_deferred()
@@ -22,7 +21,7 @@ func _ready() -> void:
 func _run() -> void:
 	SoundPlayer.played.connect(func(stream: AudioStream) -> void: played.append(stream.resource_path.get_file()))
 	await test_move_between_frames_does_not_fake_solution()
-	await test_move_between_frames_plays_no_transient_sound()
+	await test_move_between_frames_leaves_no_transient_state()
 	await test_drop_back_on_same_slot_keeps_character()
 	await test_drop_back_scene_keeps_scene()
 	await test_leaving_mid_ending_stops_it()
@@ -70,7 +69,7 @@ func test_move_between_frames_does_not_fake_solution() -> void:
 	t.check(not game.logic.is_solved(game.collect_board()), "board really is unsolved")
 	await free_game(game)
 
-func test_move_between_frames_plays_no_transient_sound() -> void:
+func test_move_between_frames_leaves_no_transient_state() -> void:
 	var game := await new_game()
 	var f := game.frames
 	await fill(f[0], office, ada, charles)
@@ -78,7 +77,7 @@ func test_move_between_frames_plays_no_transient_sound() -> void:
 	played.clear()
 
 	await drag(f[0].sprite_right, f[1], charles, right_half(f[1]))
-	t.eq(played, [BOING] as Array[String], "only the drop sound, no transient M2 pencil")
+	t.eq(played, [] as Array[String], "no sound while moving between frames")
 	t.eq(f[1].background.texture, office.variants["default"], "no transient open door left behind")
 	await free_game(game)
 

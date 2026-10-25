@@ -1,8 +1,6 @@
 class_name ScreenManager
 extends Control
 
-const SOUND_BOOK_OPEN := preload("res://assets/sounds/soumages-book-opening-345808.mp3")
-const SOUND_BOOK_CLOSE := preload("res://assets/sounds/oxidvideos-book-closing-466850.mp3")
 
 @export var flip_duration := 0.7
 
@@ -73,7 +71,6 @@ func _play_scene_flip(direction: float) -> void:
 
 	_is_flipping = true
 	_flip_direction = direction
-	SoundPlayer.play(SOUND_BOOK_OPEN if direction > 0.0 else SOUND_BOOK_CLOSE)
 	if direction > 0.0 and game_screen.story:
 		game_screen.load_story(game_screen.story)
 	elif direction < 0.0:

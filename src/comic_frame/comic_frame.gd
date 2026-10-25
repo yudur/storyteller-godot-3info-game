@@ -2,7 +2,6 @@ class_name ComicFrame
 extends Control
 
 signal contents_changed
-signal item_dropped
 
 enum CharacterSide {
 	LEFT,
@@ -132,9 +131,6 @@ func _on_data_dropped(data: Variant, at_position: Vector2) -> void:
 		var side := _side_from_position(at_position)
 		add_character(data, side)
 		_remember_drop(data, _side_name(side))
-	else:
-		return
-	item_dropped.emit()
 
 func _remember_drop(data: Variant, slot: String) -> void:
 	_last_drop = {"data": data, "slot": slot}

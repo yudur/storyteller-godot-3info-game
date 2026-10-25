@@ -21,8 +21,6 @@ func _initialize() -> void:
 	test_doubt_cases()
 	test_doubt_propagates()
 	test_wrong_frame_is_not_solved()
-	test_sound_counts()
-	test_same_outcome()
 	test_ending()
 
 	t.finish(self)
@@ -94,7 +92,6 @@ func test_incomplete_frames_are_neutral() -> void:
 	var empty := logic.evaluate(board([]))
 	t.eq(states(empty), [N, N, N, N], "empty board")
 	for result in empty:
-		t.eq(result.sounds.size(), 0, "neutral has no sound")
 		t.eq([result.scene_variant, result.left_pose, result.right_pose], ["default", "default", "default"], "neutral visuals")
 		t.check(not result.show_doubt_icon, "neutral has no doubt icon")
 
@@ -119,7 +116,6 @@ func test_doubt_cases() -> void:
 	t.eq(r[0].state, D, "Ada and Charles in kitchen")
 	t.eq([r[0].left_pose, r[0].right_pose], ["doubt", "default"], "doubt poses")
 	t.check(r[0].show_doubt_icon, "doubt icon")
-	t.eq(r[0].sounds.size(), 1, "doubt sound")
 	t.eq(r[0].moment, "", "doubt has no moment")
 
 	r = logic.evaluate(board([fc(office, ada, charles), fc(kitchen, charles, teapot)]))
@@ -135,10 +131,6 @@ func test_doubt_cases() -> void:
 	t.eq(r[0].state, D, "kitchen in Q1")
 	t.eq([r[0].left_pose, r[0].right_pose], ["default", "default"], "doubt without Ada keeps defaults")
 
-	var with_ada := logic.evaluate(board([fc(kitchen, ada, charles)]))[0].sounds[0]
-	var without_ada := logic.evaluate(board([fc(kitchen, charles, teapot)]))[0].sounds[0]
-	t.check(with_ada != without_ada, "different doubt sounds with and without Ada")
-
 func test_doubt_propagates() -> void:
 	var r := logic.evaluate(board([fc(kitchen, ada, charles), fc(office, ada, charles)]))
 	t.eq(r[1].state, D, "office after doubtful frame")
@@ -148,23 +140,6 @@ func test_wrong_frame_is_not_solved() -> void:
 	frames[2] = fc(office, ada, charles)
 	t.check(not logic.is_solved(frames), "wrong Q3 is not solved")
 	t.check(not logic.is_solved(board([])), "empty board is not solved")
-
-func test_sound_counts() -> void:
-	var r := logic.evaluate(solution())
-	t.eq(r.map(func(x: FrameResult) -> int: return x.sounds.size()), [1, 1, 1, 2], "moment sound counts")
-	for result in r:
-		for sound in result.sounds:
-			t.check(sound is AudioStream, "moment sound is an AudioStream")
-
-func test_same_outcome() -> void:
-	var a := logic.evaluate(solution())
-	var b := logic.evaluate(solution())
-	for i in a.size():
-		t.check(a[i].same_outcome(b[i]), "same outcome %d" % i)
-
-	var doubt := logic.evaluate(board([fc(kitchen, ada, charles)]))[0]
-	t.check(not a[0].same_outcome(doubt), "M1 vs doubt")
-	t.check(not a[0].same_outcome(null), "vs null")
 
 func test_ending() -> void:
 	var ending := logic.ending(solution())

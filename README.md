@@ -120,8 +120,11 @@ chave que não existe cai para ela.
 
 1. Crie os `.tres` dos personagens e cenários novos em `data/`, com os
    dicionários de poses e variantes.
-2. Escreva as regras como uma subclasse de `StoryLogic` em `core/story_logic/`,
-   implementando `evaluate`, `is_solved` e `ending`.
+2. Escreva as regras como uma subclasse de `MomentLogic` em `core/story_logic/`,
+   declarando `_solution()` (a sequência de momentos), `_moments()` (a tabela de
+   pose e variante por momento), `_match_moment()` e `ending()`. A cascata de
+   quadros neutros e a regra de dúvida já vêm da base — **não as reescreva**;
+   sobrescreva só o `_doubt()` se alguma peça tiver cara de dúvida.
 3. Crie o `.tres` da fase em `data/stories/`, apontando `logic` para esse
    script e listando as peças em `draggable_items`.
 4. Acrescente a fase ao array `stories` em

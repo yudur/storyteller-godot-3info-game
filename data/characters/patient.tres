@@ -9,7 +9,6 @@
 script = ExtResource("1_script")
 id = "patient"
 display_name = "Cadeirante"
-faces_right = true
 poses = Dictionary[String, Texture2D]({
 "cured": ExtResource("4_cured"),
 "default": ExtResource("2_default"),

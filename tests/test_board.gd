@@ -10,6 +10,9 @@ var kitchen: SceneData = load("res://data/scenes/kitchen.tres")
 var ada: CharacterData = load("res://data/characters/ada.tres")
 var charles: CharacterData = load("res://data/characters/charles.tres")
 var teapot: CharacterData = load("res://data/characters/teapot.tres")
+var hospital: SceneData = load("res://data/scenes/hospital.tres")
+var patient: CharacterData = load("res://data/characters/patient.tres")
+var tatiana: CharacterData = load("res://data/characters/tatiana.tres")
 
 const LEFT := ComicFrame.CharacterSide.LEFT
 const RIGHT := ComicFrame.CharacterSide.RIGHT
@@ -75,6 +78,8 @@ func _run() -> void:
 
 	game.queue_free()
 	await get_tree().process_frame
+
+	await test_phase_2_characters_face_the_center()
 	t.finish(get_tree())
 
 func fill(frame: ComicFrame, scene: SceneData, left: CharacterData, right: CharacterData) -> void:
@@ -83,3 +88,31 @@ func fill(frame: ComicFrame, scene: SceneData, left: CharacterData, right: Chara
 	frame.add_character(right, RIGHT)
 	# Board evaluation is deferred to the end of the frame
 	await get_tree().process_frame
+
+# O Cadeirante é desenhado de perfil virado para a esquerda, como o Charles.
+# Sem isso declarado, ele vira as costas para a Tatiana em dois dos três cards
+# da fase 2 — e não há slot em que o valor errado funcione
+func test_phase_2_characters_face_the_center() -> void:
+	var left_frame := await new_frame()
+	left_frame.set_scene(hospital)
+	left_frame.add_character(patient, LEFT)
+	left_frame.add_character(tatiana, RIGHT)
+	await get_tree().process_frame
+	t.eq(left_frame.sprite_left.flip_h, true, "the patient on the left is mirrored to face right")
+
+	var right_frame := await new_frame()
+	right_frame.set_scene(hospital)
+	right_frame.add_character(tatiana, LEFT)
+	right_frame.add_character(patient, RIGHT)
+	await get_tree().process_frame
+	t.eq(right_frame.sprite_right.flip_h, false, "the patient on the right keeps facing left")
+
+	left_frame.queue_free()
+	right_frame.queue_free()
+	await get_tree().process_frame
+
+func new_frame() -> ComicFrame:
+	var frame: ComicFrame = load("res://src/comic_frame/comic_frame.tscn").instantiate()
+	add_child(frame)
+	await get_tree().process_frame
+	return frame

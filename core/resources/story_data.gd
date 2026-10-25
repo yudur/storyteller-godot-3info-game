@@ -5,4 +5,5 @@ extends Resource
 @export var title: String
 @export var number_of_frames: int
 @export var draggable_items: Array[Resource] = []
-@export var correct_answers: Array[CorrectAnswerRow] = []
+# Script extending StoryLogic that decides poses, backgrounds and the solution
+@export var logic: Script

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada Lovelace default.png" id="2_default"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada Lovelace com Caneta de pena.png" id="3_pen"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada com Caneta e Artigos.png" id="4_pen_articles"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada Lovelace com os artigos dos lados.png" id="5_pile"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada Lovelace com dúvida .png" id="6_doubt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada rindo.png" id="7_laughing"]
+
+[resource]
+script = ExtResource("1_script")
+id = "ada"
+display_name = "Ada Lovelace"
+poses = Dictionary[String, Texture2D]({
+"default": ExtResource("2_default"),
+"doubt": ExtResource("6_doubt"),
+"laughing": ExtResource("7_laughing"),
+"pen": ExtResource("3_pen"),
+"pen_articles": ExtResource("4_pen_articles"),
+"pile": ExtResource("5_pile")
+})

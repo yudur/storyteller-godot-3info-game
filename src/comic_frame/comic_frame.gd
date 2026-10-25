@@ -39,7 +39,7 @@ func clear_frame() -> void:
 
 func set_scene(scene: SceneData) -> void:
 	current_scene = scene
-	background.texture = scene.background if scene else null
+	background.texture = scene.get_variant("default") if scene else null
 	_update_drag_sources()
 
 	if background.texture:
@@ -48,7 +48,7 @@ func set_scene(scene: SceneData) -> void:
 		background.modulate.a = 1.0
 
 func add_character(character: CharacterData, side: CharacterSide) -> void:
-	if not character or not character.sprite_normal:
+	if not character or not character.get_pose("default"):
 		return
 
 	var sprite := _get_sprite(side)
@@ -60,7 +60,7 @@ func add_character(character: CharacterData, side: CharacterSide) -> void:
 	else:
 		character_right = character
 
-	sprite.texture = character.sprite_normal
+	sprite.texture = character.get_pose("default")
 	sprite.set_drag_data(character)
 	animator.fade_in_character(sprite, _side_name(side))
 	_update_drag_sources()

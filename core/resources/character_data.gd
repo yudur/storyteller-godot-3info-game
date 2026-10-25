@@ -4,7 +4,14 @@ extends Resource
 @export var id: String
 @export var display_name: String
 
-# Basic visual expressions that change according to the story's context
-@export var sprite_normal: Texture2D
-@export var sprite_shocked: Texture2D
-@export var sprite_sad: Texture2D
+# Pose name -> sprite. "default" is required; story logic picks the others by context
+@export var poses: Dictionary[String, Texture2D] = {}
+
+func get_pose(key: String) -> Texture2D:
+	if poses.has(key):
+		return poses[key]
+	if poses.has("default"):
+		return poses["default"]
+
+	push_warning("CharacterData '%s' has no pose '%s' nor 'default'" % [id, key])
+	return null

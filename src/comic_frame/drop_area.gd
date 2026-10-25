@@ -5,8 +5,12 @@ signal data_dropped(data: Variant, position: Vector2)
 
 var enabled := true
 
-func _ready() -> void:
-	SignalBus.drag_is_active.connect(_on_drag_is_active)
+# Connecting here rather than in _ready because the screen this lives in is
+# reparented between viewports on every page flip: that fires _exit_tree, which
+# drops the connection, but it does not run _ready again
+func _enter_tree() -> void:
+	if not SignalBus.drag_is_active.is_connected(_on_drag_is_active):
+		SignalBus.drag_is_active.connect(_on_drag_is_active)
 	_on_drag_is_active(false)
 
 func _exit_tree() -> void:

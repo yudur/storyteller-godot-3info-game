@@ -25,6 +25,7 @@ func _run() -> void:
 	await test_drop_back_on_same_slot_keeps_character()
 	await test_drop_back_scene_keeps_scene()
 	await test_leaving_mid_ending_stops_it()
+	await test_drop_areas_survive_the_screen_being_reparented()
 	t.finish(get_tree())
 
 func new_game() -> GameScreen:
@@ -123,5 +124,26 @@ func test_leaving_mid_ending_stops_it() -> void:
 	await get_tree().create_timer(5.0).timeout
 	t.eq(played.count("soundreality-bell-sound-effect-613873.mp3"), 0, "no bell over the menu")
 	t.eq(played.count("alex_jauk-camera-sound-236021.mp3"), 0, "no camera clicks over the menu")
+	manager.queue_free()
+	await get_tree().process_frame
+
+# O ScreenManager reparenta a tela do jogo para dentro de um viewport antes de
+# cada virada, o que dispara _exit_tree em cada FrameDropArea sem re-executar
+# _ready. Se a conexão com SignalBus.drag_is_active não sobreviver a isso, o
+# mouse_filter fica preso em IGNORE e o Godot nunca entrega o drop
+func test_drop_areas_survive_the_screen_being_reparented() -> void:
+	var manager: ScreenManager = load("res://src/screen_manager/screen_manager.tscn").instantiate()
+	add_child(manager)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	manager.navigate_to(ScreenManager.Screen.GAME)
+	await get_tree().create_timer(manager.flip_duration + 0.3).timeout
+
+	var frame: ComicFrame = manager.game_screen.frames[0]
+	SignalBus.drag_is_active.emit(true)
+	t.eq(frame.drop_area.mouse_filter, Control.MOUSE_FILTER_STOP, "drop area accepts drops after the flip")
+	SignalBus.drag_is_active.emit(false)
+	t.eq(frame.drop_area.mouse_filter, Control.MOUSE_FILTER_IGNORE, "drop area is inert with no drag")
+
 	manager.queue_free()
 	await get_tree().process_frame

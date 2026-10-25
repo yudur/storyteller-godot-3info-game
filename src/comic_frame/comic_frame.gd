@@ -61,6 +61,8 @@ func add_character(character: CharacterData, side: CharacterSide) -> void:
 		character_right = character
 
 	sprite.texture = character.get_pose("default")
+	# Left slot faces right and right slot faces left, toward the other character
+	sprite.flip_h = character.faces_right != (side == CharacterSide.LEFT)
 	sprite.set_drag_data(character)
 	animator.fade_in_character(sprite, _side_name(side))
 	_update_drag_sources()

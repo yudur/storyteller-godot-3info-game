@@ -3,6 +3,8 @@ extends Resource
 
 @export var id: String
 @export var display_name: String
+# Direction the sprite art looks at; frames mirror it so characters face the center
+@export var faces_right := false
 
 # Pose name -> sprite. "default" is required; story logic picks the others by context
 @export var poses: Dictionary[String, Texture2D] = {}

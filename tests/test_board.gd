@@ -37,6 +37,12 @@ func _run() -> void:
 	t.eq(frames[1].background.texture, office.variants["open_door"], "Q2 open door")
 	t.eq(frames[1].sprite_right.texture, ada.poses["pen_articles"], "Q2 Ada on the right")
 
+	# Characters always face the center: Ada's art faces right, Charles' faces left
+	t.eq(frames[0].sprite_left.flip_h, false, "Ada on the left keeps facing right")
+	t.eq(frames[1].sprite_right.flip_h, true, "Ada on the right is mirrored to face left")
+	t.eq(frames[1].sprite_left.flip_h, true, "Charles on the left is mirrored to face right")
+	t.eq(frames[0].sprite_right.flip_h, false, "Charles on the right keeps facing left")
+
 	await fill(frames[2], kitchen, charles, teapot)
 	t.eq(frames[2].sprite_left.texture, charles.poses["cup"], "Q3 Charles with cup")
 

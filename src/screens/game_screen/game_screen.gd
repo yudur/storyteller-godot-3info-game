@@ -1,6 +1,8 @@
 class_name GameScreen
 extends Control
 
+const SOUND_DROP := preload("res://assets/sounds/freesound_community-cartoon_boing-92413.mp3")
+
 @export var story: StoryData
 @export var frame_scene: PackedScene
 @export var draggable_scene: PackedScene
@@ -11,6 +13,7 @@ extends Control
 
 var logic: StoryLogic
 var frames: Array[ComicFrame] = []
+var _last_results: Array[FrameResult] = []
 
 func _ready() -> void:
 	if story:
@@ -29,6 +32,7 @@ func load_story(story_data: StoryData) -> void:
 
 func clear_generated_content() -> void:
 	frames.clear()
+	_last_results.clear()
 	for child in card_grid.get_children():
 		card_grid.remove_child(child)
 		child.queue_free()
@@ -45,6 +49,7 @@ func create_frames() -> void:
 		var frame: ComicFrame = frame_scene.instantiate()
 		card_grid.add_child(frame)
 		frame.contents_changed.connect(_evaluate_board)
+		frame.item_dropped.connect(SoundPlayer.play.bind(SOUND_DROP))
 		frames.append(frame)
 
 func create_draggable_items() -> void:
@@ -70,6 +75,9 @@ func _evaluate_board() -> void:
 	var results := logic.evaluate(board)
 	for index in frames.size():
 		frames[index].apply_result(results[index])
+		if _last_results.is_empty() or not results[index].same_outcome(_last_results[index]):
+			SoundPlayer.play_all(results[index].sounds)
+	_last_results = results
 
 	if logic.is_solved(board):
 		print("solved")

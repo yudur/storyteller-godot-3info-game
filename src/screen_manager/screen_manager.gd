@@ -1,6 +1,9 @@
 class_name ScreenManager
 extends Control
 
+const SOUND_BOOK_OPEN := preload("res://assets/sounds/soumages-book-opening-345808.mp3")
+const SOUND_BOOK_CLOSE := preload("res://assets/sounds/oxidvideos-book-closing-466850.mp3")
+
 @export var flip_duration := 0.7
 
 @onready var screen_container: SubViewportContainer = $ScreenViewportContainer
@@ -68,6 +71,7 @@ func _play_scene_flip(direction: float) -> void:
 
 	_is_flipping = true
 	_flip_direction = direction
+	SoundPlayer.play(SOUND_BOOK_OPEN if direction > 0.0 else SOUND_BOOK_CLOSE)
 	screen_container.visible = false
 	next_screen_container.visible = false
 	next_screen_container.modulate.a = 0.0

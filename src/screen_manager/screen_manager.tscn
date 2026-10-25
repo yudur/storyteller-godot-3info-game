@@ -76,12 +76,6 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="StartScreen" parent="ScreenViewportContainer/ScreenViewport" instance=ExtResource("11_start")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="NextScreenViewportContainer" type="SubViewportContainer" parent="."]
 visible = false
@@ -105,12 +99,6 @@ size_2d_override_stretch = true
 render_target_update_mode = 0
 
 [node name="GameScreen" parent="NextScreenViewportContainer/NextScreenViewport" instance=ExtResource("8_game")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="PageFlipMesh" type="Polygon2D" parent="."]
 visible = false

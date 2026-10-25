@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.5", "GL Compatibility")
 [autoload]
 
 SignalBus="*res://common/signal_bus.gd"
+SoundPlayer="*res://common/sound_player.gd"
 
 [display]
 

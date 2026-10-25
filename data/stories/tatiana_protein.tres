@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="StoryData" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://core/resources/story_data.gd" id="1_story"]
+[ext_resource type="Script" path="res://core/story_logic/tatiana_logic.gd" id="2_logic"]
+[ext_resource type="Resource" path="res://data/characters/patient.tres" id="3_patient"]
+[ext_resource type="Resource" path="res://data/characters/tatiana.tres" id="4_tatiana"]
+[ext_resource type="Resource" path="res://data/characters/slide.tres" id="5_slide"]
+[ext_resource type="Resource" path="res://data/scenes/hospital.tres" id="6_hospital"]
+[ext_resource type="Resource" path="res://data/scenes/lab.tres" id="7_lab"]
+
+[resource]
+script = ExtResource("1_story")
+id = "tatiana_protein"
+title = "Tatiana Sampaio ajuda um cadeirante"
+number_of_frames = 3
+draggable_items = Array[Resource]([ExtResource("3_patient"), ExtResource("4_tatiana"), ExtResource("5_slide"), ExtResource("6_hospital"), ExtResource("7_lab")])
+logic = ExtResource("2_logic")

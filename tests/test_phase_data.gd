@@ -45,7 +45,7 @@ func _initialize() -> void:
 	var tatiana: CharacterData = load("res://data/characters/tatiana.tres")
 	t.check(tatiana != null, "tatiana.tres loads")
 	if tatiana:
-		for key in ["default", "exams", "microscope", "syringe", "doubt", "happy"]:
+		for key in ["default", "exams", "microscope", "syringe", "happy"]:
 			t.check(tatiana.poses.get(key) is Texture2D, "tatiana pose %s" % key)
 		t.eq(tatiana.get_pose("nao_existe"), tatiana.poses["default"], "phase 2 pose fallback")
 

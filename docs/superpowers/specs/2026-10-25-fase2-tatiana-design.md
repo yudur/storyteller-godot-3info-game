@@ -61,8 +61,9 @@ o porquê:
 4. **A fase 2 não usa variantes de cenário.** Os dois cenários têm só
    `default`; a história inteira é contada pelas poses. A fase 1 usava variantes
    porque a porta do escritório abria; aqui nada no cenário muda.
-5. **Tatiana é quem mostra dúvida**, e ela está nos três cards, então a dúvida
-   tem sempre uma cara para fazer.
+5. **A dúvida não troca sprite nenhum.** As peças ficam com a imagem normal e
+   quem avisa é o "?" no canto do quadro, que o `ComicFrame` já desenha. A fase
+   1 é a exceção: a Ada tem uma cara de dúvida desenhada à mão e a mantém.
 6. **A arte que falta entra como placeholder gerado**, substituível por arquivo
    sem mudar código, como foi feito com o Bule de chá.
 
@@ -148,8 +149,9 @@ senão -> ""
 
 `_solution()` é `["M1", "M2", "M3"]`.
 
-`_doubt` dá a pose `doubt` a `tatiana` quando ela está no quadro; as demais
-peças ficam em `default`.
+`_doubt` não é sobrescrito: a fase herda o da base, que deixa todas as peças em
+`default`. Num quadro em dúvida ninguém troca de sprite e o "?" do canto do
+quadro é o aviso inteiro.
 
 **Desfecho.** `frame_index = 2`, `scene_variant = "default"`, sem sons. Ao
 contrário da fase 1, as duas poses são **diferentes**, e `ComicFrame.apply_ending`
@@ -164,7 +166,7 @@ Recursos novos em `data/`:
 | Recurso | Chaves |
 |---|---|
 | `characters/patient.tres` | `default`, `hopeful`, `cured` |
-| `characters/tatiana.tres` | `default`, `exams`, `microscope`, `syringe`, `doubt`, `happy` |
+| `characters/tatiana.tres` | `default`, `exams`, `microscope`, `syringe`, `happy` |
 | `characters/slide.tres` | `default` |
 | `scenes/hospital.tres` | `default` |
 | `scenes/lab.tres` | `default` |
@@ -192,9 +194,9 @@ Oito das doze imagens já existem:
 | `hospital` `default` | `scenario_phase2_hospital.png` |
 | `lab` `default` | `scenario_phase2_lab.png` |
 
-Faltam **quatro**, que entram como placeholder gerado (PNG com o nome da peça
+Faltam **três**, que entram como placeholder gerado (PNG com o nome da peça
 escrito, no modelo do `teapot_placeholder.png`): `patient` `hopeful`,
-`tatiana` `microscope`, `tatiana` `doubt` e `slide` `default`. Trocar qualquer
+`tatiana` `microscope` e `slide` `default`. Trocar qualquer
 um depois é substituir o arquivo — nenhuma linha de código muda.
 
 `Tatiana usando microscópio.png`, na raiz, é um quadro montado e serve de
@@ -228,9 +230,9 @@ Comandos no `README.md`; a suíte roda com `GODOT=... sh tests/run_all.sh`.
 - `tests/test_tatiana_logic.gd` (novo) cobre só a tabela da fase 2: os três
   momentos com suas poses; `is_solved` na solução; lados invertidos dando os
   mesmos momentos; laboratório sem a lâmina ficando neutro e cascateando;
-  hospital no card 2 e laboratório no card 1 dando dúvida; `tatiana` recebendo
-  a pose `doubt` e a lâmina não; e o `ending` pondo `cured` e `happy` em cada
-  lado certo, **inclusive com as peças invertidas**.
+  hospital no card 2 e laboratório no card 1 dando dúvida, com as peças
+  mantendo o sprite normal e só o "?" avisando; e o `ending` pondo `cured` e
+  `happy` em cada lado certo, **inclusive com as peças invertidas**.
 - `tests/test_phase_data.gd` ganha as asserções dos seis recursos novos.
 - `tests/test_menu.gd` passa a esperar **dois** capítulos: "Capítulo 2" existe
   com o título da fase 2, trocar de capítulo recria o tabuleiro com 3 quadros,

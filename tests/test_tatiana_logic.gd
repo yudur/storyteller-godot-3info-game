@@ -75,9 +75,9 @@ func test_doubt_cases() -> void:
 	])
 	var results := logic.evaluate(hospital_in_second)
 	t.eq(results[1].state, FrameResult.State.DOUBT, "hospital again right after M1 is doubt")
-	t.eq(results[1].right_pose, "doubt", "Tatiana shows the doubt face")
-	t.eq(results[1].left_pose, "default", "the patient has no doubt face")
-	t.check(results[1].show_doubt_icon, "doubt shows the icon")
+	t.eq(results[1].right_pose, "default", "Tatiana keeps her normal sprite in doubt")
+	t.eq(results[1].left_pose, "default", "the patient keeps his normal sprite in doubt")
+	t.check(results[1].show_doubt_icon, "the frame's question mark is what signals doubt")
 
 	var lab_first := logic.evaluate(board([fc(lab, tatiana, slide)]))
 	t.eq(lab_first[0].state, FrameResult.State.DOUBT, "the lab cannot open the story")

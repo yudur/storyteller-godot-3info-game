@@ -1,11 +1,10 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Tatiane Sampaio Default.png" id="2_default"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Tatiana Sampaio com exame.png" id="3_exams"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Tatiana Sampaio no microscópio.png" id="4_microscope"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Tatiana Sampaio com seringa.png" id="5_syringe"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/Tatiana Sampaio com dúvida.png" id="6_doubt"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Tatiana Sampaio com seringa e exames.png" id="7_happy"]
 
 [resource]
@@ -15,7 +14,6 @@ display_name = "Tatiana Sampaio"
 faces_right = true
 poses = Dictionary[String, Texture2D]({
 "default": ExtResource("2_default"),
-"doubt": ExtResource("6_doubt"),
 "exams": ExtResource("3_exams"),
 "happy": ExtResource("7_happy"),
 "microscope": ExtResource("4_microscope"),

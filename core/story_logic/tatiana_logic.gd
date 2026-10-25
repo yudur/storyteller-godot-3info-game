@@ -47,9 +47,5 @@ func _match_moment(content: FrameContent, index: int, previous_moment: String) -
 
 	return ""
 
-func _doubt(content: FrameContent) -> FrameResult:
-	var result := FrameResult.new()
-	result.state = FrameResult.State.DOUBT
-	result.left_pose = "doubt" if content.left.id == "tatiana" else "default"
-	result.right_pose = "doubt" if content.right.id == "tatiana" else "default"
-	return result
+# No _doubt override: the pieces keep their normal sprites and the frame's
+# question mark is what tells the player the arrangement does not add up

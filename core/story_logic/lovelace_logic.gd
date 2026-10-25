@@ -1,0 +1,109 @@
+class_name LovelaceLogic
+extends StoryLogic
+
+const SOLUTION := ["M1", "M2", "M3", "M4"]
+
+# Moment -> scene variant and pose per character id
+const MOMENTS := {
+	"M1": {"variant": "default", "poses": {"ada": "pen", "charles": "clipboard"}},
+	"M2": {"variant": "open_door", "poses": {"ada": "pen_articles", "charles": "default"}},
+	"M3": {"variant": "default", "poses": {"charles": "cup", "teapot": "default"}},
+	"M4": {"variant": "papers", "poses": {"ada": "pile", "charles": "scared_cup"}},
+}
+
+const SOUND_PAPER := preload("res://assets/sounds/floraphonic-rustling-bushes-dried-leaves-6-230205.mp3")
+const SOUND_PENCIL := preload("res://assets/sounds/u_xg7ssi08yr-writing-with-pencil-371358.mp3")
+const SOUND_TEA := preload("res://assets/sounds/freesound_community-pouring-tea-70635.mp3")
+const SOUND_SURPRISE := preload("res://assets/sounds/universfield-male-surprise-reaction-242637.mp3")
+const SOUND_GLASS := preload("res://assets/sounds/vidro-quebrando.mp3")
+const SOUND_DOUBT_ADA := preload("res://assets/sounds/voiceofruthie-hmmmm-338158.mp3")
+const SOUND_DOUBT := preload("res://assets/sounds/freesound_community-hmms-various-1-7175.mp3")
+const SOUND_WOMAN_LAUGH := preload("res://assets/sounds/freesound_community-woman_laughs-37559.mp3")
+const SOUND_MAN_LAUGH := preload("res://assets/sounds/floraphonic-man-laughs-2-190296.mp3")
+
+const MOMENT_SOUNDS := {
+	"M1": [SOUND_PAPER],
+	"M2": [SOUND_PENCIL],
+	"M3": [SOUND_TEA],
+	"M4": [SOUND_SURPRISE, SOUND_GLASS],
+}
+
+func evaluate(board: Array[FrameContent]) -> Array[FrameResult]:
+	var results: Array[FrameResult] = []
+	var previous: FrameResult = null
+
+	for i in board.size():
+		var result := _evaluate_frame(board[i], i, previous)
+		results.append(result)
+		previous = result
+
+	return results
+
+func is_solved(board: Array[FrameContent]) -> bool:
+	if board.size() != SOLUTION.size():
+		return false
+
+	var moments := evaluate(board).map(func(result: FrameResult) -> String: return result.moment)
+	return moments == SOLUTION
+
+func ending(board: Array[FrameContent]) -> EndingData:
+	if not is_solved(board):
+		return null
+
+	var data := EndingData.new()
+	data.frame_index = SOLUTION.size() - 1
+	data.scene_variant = "papers"
+	data.left_pose = "laughing"
+	data.right_pose = "laughing"
+	data.sounds.assign([SOUND_WOMAN_LAUGH, SOUND_MAN_LAUGH])
+	return data
+
+func _evaluate_frame(content: FrameContent, index: int, previous: FrameResult) -> FrameResult:
+	var is_incomplete := content.scene == null or content.character_count() < 2
+	var previous_is_neutral := index > 0 and previous.state == FrameResult.State.NEUTRAL
+	if is_incomplete or previous_is_neutral:
+		return FrameResult.new()
+
+	var moment := _match_moment(content, index, previous)
+	if moment.is_empty():
+		return _doubt(content)
+	return _coherent(content, moment)
+
+func _match_moment(content: FrameContent, index: int, previous: FrameResult) -> String:
+	var previous_moment := previous.moment if previous else ""
+	var scene_id := content.scene.id
+
+	if scene_id == "office" and _has_pair(content, "ada", "charles"):
+		if index == 0:
+			return "M1"
+		if previous_moment == "M1":
+			return "M2"
+		if previous_moment == "M3":
+			return "M4"
+	elif scene_id == "kitchen" and _has_pair(content, "charles", "teapot"):
+		if previous_moment == "M2":
+			return "M3"
+
+	return ""
+
+func _has_pair(content: FrameContent, first_id: String, second_id: String) -> bool:
+	return content.has_character(first_id) and content.has_character(second_id)
+
+func _coherent(content: FrameContent, moment: String) -> FrameResult:
+	var result := FrameResult.new()
+	var poses: Dictionary = MOMENTS[moment]["poses"]
+	result.state = FrameResult.State.COHERENT
+	result.moment = moment
+	result.scene_variant = MOMENTS[moment]["variant"]
+	result.left_pose = poses.get(content.left.id, "default")
+	result.right_pose = poses.get(content.right.id, "default")
+	result.sounds.assign(MOMENT_SOUNDS[moment])
+	return result
+
+func _doubt(content: FrameContent) -> FrameResult:
+	var result := FrameResult.new()
+	result.state = FrameResult.State.DOUBT
+	result.left_pose = "doubt" if content.left.id == "ada" else "default"
+	result.right_pose = "doubt" if content.right.id == "ada" else "default"
+	result.sounds.assign([SOUND_DOUBT_ADA if content.has_character("ada") else SOUND_DOUBT])
+	return result

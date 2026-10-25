@@ -142,7 +142,7 @@ func test_two_chapters() -> void:
 	var buttons := rows(menu)
 	t.eq(buttons.size(), 2, "two chapter rows")
 	t.eq(buttons[1].text, "Capítulo 2", "second chapter label")
-	t.eq(buttons[1].tooltip_text, "Tatiana Sampaio ajuda um cadeirante", "second tooltip")
+	t.eq(buttons[1].tooltip_text, "Tatiana ajuda um cadeirante", "second tooltip")
 	await drop(menu)
 
 func test_switching_chapters_rebuilds_the_board() -> void:

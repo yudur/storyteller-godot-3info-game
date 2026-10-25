@@ -1,12 +1,15 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/teapot_placeholder.png" id="2_default"]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/draggables/charactericon_teapot.png" id="9_icon"]
 
 [resource]
 script = ExtResource("1_script")
 id = "teapot"
 display_name = "Bule de chá"
+icon = ExtResource("9_icon")
 poses = Dictionary[String, Texture2D]({
 "default": ExtResource("2_default")
 })

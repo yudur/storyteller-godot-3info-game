@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada Lovelace default.png" id="2_default"]
@@ -8,11 +8,14 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada Lovelace com dúvida .png" id="6_doubt"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Ada rindo.png" id="7_laughing"]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/draggables/charactericon_ada.png" id="9_icon"]
+
 [resource]
 script = ExtResource("1_script")
 id = "ada"
 display_name = "Ada Lovelace"
 faces_right = true
+icon = ExtResource("9_icon")
 poses = Dictionary[String, Texture2D]({
 "default": ExtResource("2_default"),
 "doubt": ExtResource("6_doubt"),

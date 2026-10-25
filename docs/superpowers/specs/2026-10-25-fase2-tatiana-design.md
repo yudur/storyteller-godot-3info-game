@@ -1,4 +1,4 @@
-# Fase 2 — "Tatiana Sampaio ajuda um cadeirante" — Design
+# Fase 2 — "Tatiana ajuda um cadeirante" — Design
 
 Data: 2026-10-25
 Fonte: `level_design.txt` (fase 2) e a arte em `assets/sprites/`
@@ -170,7 +170,7 @@ Recursos novos em `data/`:
 | `characters/slide.tres` | `default` |
 | `scenes/hospital.tres` | `default` |
 | `scenes/lab.tres` | `default` |
-| `stories/tatiana_protein.tres` | "Tatiana Sampaio ajuda um cadeirante", 3 quadros, as cinco peças, `logic = tatiana_logic.gd` |
+| `stories/tatiana_protein.tres` | "Tatiana ajuda um cadeirante", 3 quadros, as cinco peças, `logic = tatiana_logic.gd` |
 
 A fase entra no array `stories` de `src/screens/menu_screen/menu_screen.tscn`
 **depois** da fase 1, e vira "Capítulo 2" pela ordem do array.

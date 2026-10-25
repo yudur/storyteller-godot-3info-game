@@ -1,7 +1,8 @@
 class_name DraggableItem
 extends ColorRect
 
-@onready var label: Label = $Label
+@onready var icon: TextureRect = $Content/Icon
+@onready var label: Label = $Content/Label
 
 @export var data: Resource
 @export var drag_threshold := 8.0
@@ -12,7 +13,7 @@ var _drag_started := false
 var _drag_is_active := false
 
 func _ready() -> void:
-	_update_label()
+	_update_contents()
 
 func set_interactive(enabled: bool) -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP if enabled else Control.MOUSE_FILTER_IGNORE
@@ -55,11 +56,14 @@ func _set_drag_active(is_active: bool) -> void:
 	_drag_is_active = is_active
 	SignalBus.drag_is_active.emit(is_active)
 
-func _update_label() -> void:
-	if data:
-		label.text = data.display_name
-	else:
+func _update_contents() -> void:
+	if not data:
 		label.text = "Sem dados"
+		icon.texture = null
+		return
+
+	label.text = data.display_name
+	icon.texture = data.get_icon()
 
 func _create_drag_preview() -> Control:
 	var preview = ColorRect.new()
@@ -67,9 +71,12 @@ func _create_drag_preview() -> Control:
 	preview.color = Color(color.r, color.g, color.b, 0.7)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-	var preview_label = Label.new()
-	preview_label.text = label.text
-	preview_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	preview.add_child(preview_label)
+	var preview_icon := TextureRect.new()
+	preview_icon.texture = icon.texture
+	preview_icon.set_anchors_preset(Control.PRESET_FULL_RECT)
+	preview_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	preview_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	preview_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	preview.add_child(preview_icon)
 
 	return preview

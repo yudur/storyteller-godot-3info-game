@@ -1,4 +1,4 @@
-# Fase 2 "Tatiana Sampaio ajuda um cadeirante" Implementation Plan
+# Fase 2 "Tatiana ajuda um cadeirante" Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -183,7 +183,7 @@ git commit -m "feat: phase 2 characters, scenes and placeholder art"
 - Consumes: `MomentLogic` (Task 1); os `.tres` da Task 2; `TestUtils`.
 - Produces: `class_name TatianaLogic extends MomentLogic` e a fase
   `tatiana_protein.tres` (`id = "tatiana_protein"`, título
-  "Tatiana Sampaio ajuda um cadeirante", `number_of_frames = 3`,
+  "Tatiana ajuda um cadeirante", `number_of_frames = 3`,
   `draggable_items = [patient, tatiana, slide, hospital, lab]`,
   `logic = tatiana_logic.gd`).
 
@@ -247,7 +247,7 @@ Ajuste os testes que hoje esperam uma linha só e acrescente:
 func test_two_chapters() -> void
 	t.eq(rows(menu).size(), 2, "two chapter rows")
 	t.eq(rows(menu)[1].text, "Capítulo 2", "second chapter label")
-	t.eq(rows(menu)[1].tooltip_text, "Tatiana Sampaio ajuda um cadeirante", "second tooltip")
+	t.eq(rows(menu)[1].tooltip_text, "Tatiana ajuda um cadeirante", "second tooltip")
 
 func test_switching_chapters_rebuilds_the_board() -> void   # Review Focus 1
 	# entrar no capítulo 1, voltar ao menu, entrar no capítulo 2

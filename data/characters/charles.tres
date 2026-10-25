@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="CharacterData" load_steps=7 format=3]
+[gd_resource type="Resource" script_class="CharacterData" load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://core/resources/character_data.gd" id="1_script"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles Default.png" id="2_default"]
@@ -7,10 +7,13 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles Assustado com a xícara.png" id="5_scared_cup"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/Charles Rindo.png" id="6_laughing"]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/draggables/charactericon_charles.png" id="9_icon"]
+
 [resource]
 script = ExtResource("1_script")
 id = "charles"
 display_name = "Charles Babbage"
+icon = ExtResource("9_icon")
 poses = Dictionary[String, Texture2D]({
 "clipboard": ExtResource("3_clipboard"),
 "cup": ExtResource("4_cup"),

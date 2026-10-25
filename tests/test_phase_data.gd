@@ -65,4 +65,12 @@ func _initialize() -> void:
 			"phase 2 ids"
 		)
 
+	# Toda peça da prateleira, nas duas fases, resolve um ícone
+	for story_path in ["res://data/stories/lovelace_notes.tres", "res://data/stories/tatiana_protein.tres"]:
+		var story: StoryData = load(story_path)
+		t.check(story != null, "%s loads" % story_path.get_file())
+		if story:
+			for item in story.draggable_items:
+				t.check(item.get_icon() is Texture2D, "%s has a shelf icon" % item.id)
+
 	t.finish(self)

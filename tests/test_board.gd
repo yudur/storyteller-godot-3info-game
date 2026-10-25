@@ -80,6 +80,7 @@ func _run() -> void:
 	await get_tree().process_frame
 
 	await test_phase_2_characters_face_the_center()
+	await test_shelf_card_shows_icon_and_name()
 	t.finish(get_tree())
 
 func fill(frame: ComicFrame, scene: SceneData, left: CharacterData, right: CharacterData) -> void:
@@ -118,3 +119,16 @@ func new_frame() -> ComicFrame:
 	add_child(frame)
 	await get_tree().process_frame
 	return frame
+
+# O card da prateleira mostra a arte da peça com o nome embaixo
+func test_shelf_card_shows_icon_and_name() -> void:
+	var card: DraggableItem = load("res://src/draggable/draggable.tscn").instantiate()
+	card.data = tatiana
+	add_child(card)
+	await get_tree().process_frame
+
+	t.eq(card.icon.texture, tatiana.get_icon(), "the card shows the piece's icon")
+	t.eq(card.label.text, "Tatiana Sampaio", "the card shows the display name")
+	t.check(card.label.position.y > card.icon.position.y, "the name sits below the image")
+	card.queue_free()
+	await get_tree().process_frame

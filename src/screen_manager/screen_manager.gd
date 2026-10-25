@@ -1,6 +1,9 @@
 class_name ScreenManager
 extends Control
 
+# The order here is the order of the children of the Screens node, which is
+# also the order the pages turn in
+enum Screen { START, MENU, GAME }
 
 @export var flip_duration := 0.7
 
@@ -9,6 +12,7 @@ extends Control
 @onready var next_page_mesh: PageFlipMesh = $NextPageFlipMesh
 @onready var physical_page: PageFlipMesh = $pageMesh
 @onready var start_screen: StartScreen = $Screens/StartScreen
+@onready var menu_screen: MenuScreen = $Screens/MenuScreen
 @onready var game_screen: GameScreen = $Screens/GameScreen
 
 # The two viewports are not "the start page" and "the game page": one is the
@@ -20,7 +24,7 @@ var _meshes: Array[PageFlipMesh] = []
 var _screens: Array[Control] = []
 var _front := 0
 var _back := 1
-var _current_index := 0
+var _current_index := Screen.START
 var _is_flipping := false
 var _flip_direction := 1.0
 var _physical_center := Vector2.ZERO
@@ -40,7 +44,9 @@ func _ready() -> void:
 		# straight into the window instead of into a viewport
 		child.visible = false
 
-	start_screen.start_requested.connect(navigate_to.bind(1))
+	start_screen.start_requested.connect(navigate_to.bind(Screen.MENU))
+	menu_screen.phase_selected.connect(_on_phase_selected)
+	game_screen.story_completed.connect(menu_screen.mark_completed)
 	for screen in _screens:
 		if screen.has_signal("back_requested"):
 			screen.back_requested.connect(func() -> void: navigate_to(_current_index - 1))
@@ -79,10 +85,12 @@ func navigate_to(index: int) -> void:
 	# The direction only governs the geometry of the turn now, not who leaves
 	_flip_direction = 1.0 if index > _current_index else -1.0
 
-	if _screens[_current_index] == game_screen:
+	if _current_index == Screen.GAME:
 		game_screen.cancel_ending()
-	if _screens[index] == game_screen and game_screen.story:
+	if index == Screen.GAME and game_screen.story:
 		game_screen.load_story(game_screen.story)
+	if index == Screen.START:
+		menu_screen.reset_progress()
 
 	# Reparenting before the animation leaves the viewport a whole frame to
 	# render the new screen, so it never appears for one frame as the old one
@@ -107,6 +115,10 @@ func navigate_to(index: int) -> void:
 	tween.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	tween.tween_method(_apply_flip_progress, 0.0, 1.0, flip_duration)
 	tween.finished.connect(_finish_flip.bind(index))
+
+func _on_phase_selected(story: StoryData) -> void:
+	game_screen.story = story
+	navigate_to(Screen.GAME)
 
 func _mount(screen: Control, slot: int) -> void:
 	for child in _viewports[slot].get_children():

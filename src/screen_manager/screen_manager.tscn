@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://lagrhubkkadh"]
+[gd_scene load_steps=10 format=3 uid="uid://lagrhubkkadh"]
 
 [ext_resource type="Texture2D" uid="uid://cnxfjl4mxn10l" path="res://assets/sprites/flip_book/book_flip_01_aligned.png" id="1_frame_01"]
 [ext_resource type="Texture2D" uid="uid://choqme2ffjj6b" path="res://assets/sprites/flip_book/Pergaminho Antigo Isolado.png" id="5_whijw"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://ct4aexepab06t" path="res://src/screen_manager/screen_manager.gd" id="9_manager"]
 [ext_resource type="Script" uid="uid://b463pdohamr84" path="res://src/screen_manager/page_flip_mesh.gd" id="10_page_mesh"]
 [ext_resource type="PackedScene" uid="uid://bur7i0vopvpev" path="res://src/screens/start_screen/start_screen.tscn" id="11_start"]
+[ext_resource type="PackedScene" uid="uid://nmi7d4qbgjtq" path="res://src/screens/menu_screen/menu_screen.tscn" id="12_menu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_background"]
 shader = ExtResource("6_background_shader")
@@ -78,6 +79,8 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 
 [node name="StartScreen" parent="Screens" instance=ExtResource("11_start")]
+
+[node name="MenuScreen" parent="Screens" instance=ExtResource("12_menu")]
 
 [node name="NextScreenViewportContainer" type="SubViewportContainer" parent="."]
 visible = false

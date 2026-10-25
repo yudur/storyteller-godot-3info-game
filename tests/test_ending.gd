@@ -138,14 +138,22 @@ func test_screen_manager_navigation() -> void:
 	var game: GameScreen = manager.game_screen
 
 	await fill(game.frames[0], office, ada, charles)
-	manager.navigate_to(1)
+	manager.navigate_to(ScreenManager.Screen.MENU)
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager._current_index, ScreenManager.Screen.MENU, "menu page is showing")
+
+	manager.navigate_to(ScreenManager.Screen.GAME)
 	await wait(manager.flip_duration + 0.3)
 	t.check(game.frames[0].get_content().is_empty(), "entering the game resets the board")
-	t.eq(manager._current_index, 1, "game page is showing")
+	t.eq(manager._current_index, ScreenManager.Screen.GAME, "game page is showing")
 
 	await solve(game)
 	await wait(1.0 + manager.flip_duration)
-	t.eq(manager._current_index, 0, "finishing the ending flips back")
+	t.eq(manager._current_index, ScreenManager.Screen.MENU, "the ending lands on the menu")
+
+	manager.navigate_to(ScreenManager.Screen.START)
+	await wait(manager.flip_duration + 0.3)
+	t.eq(manager._current_index, ScreenManager.Screen.START, "back on the start screen")
 	manager.queue_free()
 	await get_tree().process_frame
 
@@ -170,7 +178,7 @@ func test_navigating_out_of_range_is_ignored() -> void:
 
 func test_round_trips_keep_one_parent_per_screen() -> void:
 	var manager := await new_manager()
-	for index in [1, 0, 1, 0]:
+	for index in [1, 2, 1, 0]:
 		manager.navigate_to(index)
 		await wait(manager.flip_duration + 0.3)
 

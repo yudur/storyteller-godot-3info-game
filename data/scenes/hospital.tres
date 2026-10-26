@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SceneData" load_steps=4 format=3 uid="uid://bv4svjer0cen7"]
+
+[ext_resource type="Script" uid="uid://djfqqmcws3b1c" path="res://core/resources/scene_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cg8jal38r0kup" path="res://assets/sprites/scenes/scenario_phase2_hospital.png" id="2_default"]
+[ext_resource type="Texture2D" uid="uid://dl2fi15mh7jua" path="res://assets/sprites/draggables/scenarioicon_phase2_hospital.png" id="9_icon"]
+
+[resource]
+script = ExtResource("1_script")
+id = "hospital"
+display_name = "Hospital"
+variants = Dictionary[String, Texture2D]({
+"default": ExtResource("2_default")
+})
+icon = ExtResource("9_icon")

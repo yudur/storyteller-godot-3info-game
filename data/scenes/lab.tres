@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SceneData" load_steps=4 format=3 uid="uid://c5poenyu7n274"]
+
+[ext_resource type="Script" uid="uid://djfqqmcws3b1c" path="res://core/resources/scene_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dqytbqbdmo7jf" path="res://assets/sprites/scenes/scenario_phase2_lab.png" id="2_default"]
+[ext_resource type="Texture2D" uid="uid://cs3rclu3la2hn" path="res://assets/sprites/draggables/scenarioicon_phase2_lab.png" id="9_icon"]
+
+[resource]
+script = ExtResource("1_script")
+id = "lab"
+display_name = "Laboratório"
+variants = Dictionary[String, Texture2D]({
+"default": ExtResource("2_default")
+})
+icon = ExtResource("9_icon")

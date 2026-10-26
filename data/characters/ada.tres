@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="CharacterData" load_steps=9 format=3 uid="uid://dwawd7nka8hy2"]
+
+[ext_resource type="Script" uid="uid://lywddvaxagxe" path="res://core/resources/character_data.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://b2gqk7aya3oaj" path="res://assets/sprites/characters/Ada Lovelace default.png" id="2_default"]
+[ext_resource type="Texture2D" uid="uid://dvr5ctslptwsr" path="res://assets/sprites/characters/Ada Lovelace com Caneta de pena.png" id="3_pen"]
+[ext_resource type="Texture2D" uid="uid://cet1dgwn1n0a0" path="res://assets/sprites/characters/Ada com Caneta e Artigos.png" id="4_pen_articles"]
+[ext_resource type="Texture2D" uid="uid://pagvjkrcqixk" path="res://assets/sprites/characters/Ada Lovelace com os artigos dos lados.png" id="5_pile"]
+[ext_resource type="Texture2D" uid="uid://dm61a7ligvqrq" path="res://assets/sprites/characters/Ada Lovelace com dúvida .png" id="6_doubt"]
+[ext_resource type="Texture2D" uid="uid://bqq0hbnpep22c" path="res://assets/sprites/characters/Ada rindo.png" id="7_laughing"]
+[ext_resource type="Texture2D" uid="uid://vi1ug7jg0px8" path="res://assets/sprites/draggables/charactericon_ada.png" id="9_icon"]
+
+[resource]
+script = ExtResource("1_script")
+id = "ada"
+display_name = "Ada Lovelace"
+faces_right = true
+poses = Dictionary[String, Texture2D]({
+"default": ExtResource("2_default"),
+"doubt": ExtResource("6_doubt"),
+"laughing": ExtResource("7_laughing"),
+"pen": ExtResource("3_pen"),
+"pen_articles": ExtResource("4_pen_articles"),
+"pile": ExtResource("5_pile")
+})
+icon = ExtResource("9_icon")

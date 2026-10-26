@@ -1,0 +1,72 @@
+[gd_scene load_steps=7 format=3 uid="uid://cw6tci4kj4rnb"]
+
+[ext_resource type="Script" uid="uid://b650v1kroihlo" path="res://src/screens/game_screen/game_screen.gd" id="4_game"]
+[ext_resource type="Resource" path="res://data/stories/lovelace_notes.tres" id="5_story"]
+[ext_resource type="PackedScene" uid="uid://ddehfae7hfmji" path="res://src/comic_frame/comic_frame.tscn" id="6_frame"]
+[ext_resource type="PackedScene" uid="uid://rl7oc35dom4d" path="res://src/draggable/draggable.tscn" id="7_draggable"]
+[ext_resource type="FontFile" uid="uid://do7mk8cyg73ik" path="res://assets/fonts/Aged_Ink_Press.ttf" id="7_l7u46"]
+[ext_resource type="Theme" uid="uid://bygmqgj2ibk41" path="res://assets/themes/button-theme.tres" id="8_theme"]
+
+[node name="GameScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_game")
+story = ExtResource("5_story")
+frame_scene = ExtResource("6_frame")
+draggable_scene = ExtResource("7_draggable")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="Title" type="Label" parent="Content"]
+custom_minimum_size = Vector2(0, 58)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6745098, 0.43529412, 0.43137255, 1)
+theme_override_fonts/font = ExtResource("7_l7u46")
+theme_override_font_sizes/font_size = 32
+text = "Story"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CardScroll" type="ScrollContainer" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="CardGrid" type="HFlowContainer" parent="Content/CardScroll"]
+custom_minimum_size = Vector2(0, 360)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+alignment = 1
+
+[node name="Shelf" type="HFlowContainer" parent="Content"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+theme_override_constants/h_separation = 18
+theme_override_constants/v_separation = 12
+alignment = 1
+
+[node name="BackButton" type="Button" parent="."]
+z_index = 5
+layout_mode = 0
+offset_left = 14.0
+offset_top = 10.0
+offset_right = 134.0
+offset_bottom = 54.0
+theme = ExtResource("8_theme")
+theme_override_font_sizes/font_size = 20
+text = "< Voltar"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_pressed"]

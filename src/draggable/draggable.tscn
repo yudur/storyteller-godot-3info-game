@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://rl7oc35dom4d"]
+
+[ext_resource type="Script" uid="uid://l0inhkgakvuu" path="res://src/draggable/draggable.gd" id="1_kga1i"]
+
+[node name="DraggableItem" type="ColorRect"]
+custom_minimum_size = Vector2(96, 120)
+offset_right = 96.0
+offset_bottom = 120.0
+color = Color(0.9109043, 0.91385174, 0.90375376, 0)
+script = ExtResource("1_kga1i")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="Icon" type="TextureRect" parent="Content"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Content"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1
+autowrap_mode = 2

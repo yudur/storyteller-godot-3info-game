@@ -11,8 +11,19 @@ config_version=5
 [application]
 
 config/name="Storyteller Snct 3info"
+run/main_scene="uid://lagrhubkkadh"
 config/features=PackedStringArray("4.5", "GL Compatibility")
-config/icon="res://icon.svg"
+
+[autoload]
+
+SignalBus="*res://common/signal_bus.gd"
+SoundPlayer="*res://common/sound_player.gd"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
 
 [rendering]
 

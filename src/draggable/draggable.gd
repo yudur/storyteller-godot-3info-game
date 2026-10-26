@@ -68,7 +68,7 @@ func _update_contents() -> void:
 func _create_drag_preview() -> Control:
 	var preview = ColorRect.new()
 	preview.size = size
-	preview.color = Color(color.r, color.g, color.b, 0.7)
+	preview.color = Color(color.r, color.g, color.b, 0.0)
 	preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var preview_icon := TextureRect.new()

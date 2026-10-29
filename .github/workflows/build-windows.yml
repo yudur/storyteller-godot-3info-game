@@ -1,0 +1,50 @@
+name: Build Windows
+
+on:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.5"
+  EXPORT_PRESET: "Windows Desktop"
+  BUILD_DIR: "build/windows"
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot and the export templates
+        run: |
+          base="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable"
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q godot.zip
+          sudo install -m 755 "Godot_v${GODOT_VERSION}-stable_linux.x86_64" /usr/local/bin/godot
+          unzip -q templates.tpz -d tpz
+          mkdir -p "$HOME/.local/share/godot/export_templates"
+          # The archive holds a single top-level directory whose name has
+          # varied between releases, so locate it instead of assuming it.
+          src="$(find tpz -mindepth 1 -maxdepth 1 -type d | head -1)"
+          mv "$src" "$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          godot --version
+
+      - name: Import the project
+        # .godot/ is not in the repository, and without its import cache the
+        # export cannot resolve the uid:// references. Godot can report a
+        # non-zero status on this first pass while still writing the cache, so
+        # the export below is what actually gates the build.
+        run: godot --headless --import || echo "import exited non-zero, continuing"
+
+      - name: Export the preset
+        run: |
+          mkdir -p "$BUILD_DIR"
+          godot --headless --export-release "$EXPORT_PRESET"
+          ls -lh "$BUILD_DIR"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: storyweavers-windows
+          path: build/windows/
+          if-no-files-found: error

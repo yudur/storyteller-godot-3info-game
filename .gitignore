@@ -2,3 +2,6 @@
 .godot/
 /android/
 .claude/
+
+# Build output from the export workflows
+build/

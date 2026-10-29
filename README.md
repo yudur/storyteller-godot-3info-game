@@ -65,16 +65,51 @@ página de verdade, feita com shader sobre dois `SubViewport`.
 
 ## Executáveis
 
-A pasta `executables/` contém as versões exportadas do jogo para distribuição:
+As builds não ficam no repositório. Elas são geradas sob demanda por dois
+workflows do GitHub Actions, um por plataforma:
 
-- `executables/win/` — build para Windows 64-bit, com o executável `.exe` e
-  seu arquivo de dados `.pck`.
-- `executables/linux/` — build para Linux 64-bit, com o binário `.x86_64`,
-  seu arquivo de dados `.pck` e um script `.sh` para iniciar o jogo.
+| Workflow | Preset usado | Artifact |
+|---|---|---|
+| **Build Windows** | `Windows Desktop` | `storyweavers-windows` |
+| **Build Linux** | `Linux` | `storyweavers-linux` |
 
-Para gerar novamente essas builds no Godot 4.5, use os presets definidos em
-`export_presets.cfg`. Os arquivos exportados são gravados automaticamente nos
-respectivos diretórios dentro de `executables/`.
+Para gerar: aba **Actions** → escolha o workflow → **Run workflow** → branch
+`master`. Quando terminar, o `.zip` aparece anexado àquela execução, em
+*Artifacts*.
+
+São manuais de propósito (`workflow_dispatch`). Cada execução baixa o engine e
+os export templates da release oficial do Godot — cerca de 1,4 GB — e isso não
+se justifica a cada commit.
+
+Cada zip traz **um arquivo só**: o `.pck` vai embutido no executável
+(`binary_format/embed_pck=true`), então não existe mais o par `.exe` + `.pck`
+que parava de funcionar se alguém copiasse só um dos dois.
+
+> **No Linux, refaça o `chmod +x`.** O workflow marca o binário como
+> executável, mas o zip de artifact do GitHub perde a permissão no download.
+
+O workflow faz, nessa ordem: baixa o Godot 4.5 headless e os templates, roda
+`--headless --import` para gerar o cache de import, e então
+`--headless --export-release "<preset>"`. O passo de import não é opcional: o
+`.godot/` não é versionado, e sem o cache dele o export não resolve as
+referências `uid://` — a cena principal do projeto é uma delas.
+
+### O que não desfazer no `export_presets.cfg`
+
+Três ajustes existem para o CI funcionar, e o editor do Godot pode reverter
+sem avisar se você mexer nos presets pela interface:
+
+- **Os dois presets têm nomes diferentes** (`Windows Desktop` e `Linux`). O
+  CLI seleciona preset *por nome*; enquanto ambos se chamavam `Storyweavers`,
+  não havia como exportar um sem o outro.
+- **`application/modify_resources=false`**, no preset do Windows. A `true`, o
+  Godot exige o `rcedit` para escrever ícone e versão dentro do `.exe`, e ele
+  não existe ao exportar a partir do Linux. Todos os campos que o `rcedit`
+  escreveria estão vazios, então nada se perde.
+- **`export_path` aponta para `build/`**, que está no `.gitignore`.
+
+Para exportar na sua máquina, os mesmos presets servem — *Projeto → Exportar*
+no editor, ou `godot --headless --export-release "Linux"`.
 
 ## Testes
 
@@ -107,7 +142,7 @@ src/screen_manager/ navegação e a virada de página
 common/             autoloads: SignalBus (drag) e SoundPlayer (pool de áudio)
 data/               as fases e seus personagens/cenários, em .tres
 assets/             sprites, sons, fontes, shaders, temas
-executables/        builds exportadas para Windows e Linux
+.github/workflows/  os dois workflows de export (Windows e Linux)
 tests/              testes headless + run_all.sh
 docs/superpowers/   especificações de design e planos de implementação
 ```
